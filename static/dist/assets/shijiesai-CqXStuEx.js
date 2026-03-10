@@ -1,0 +1,1 @@
+import{s as e}from"./index-BLB6NaLo.js";function t(i){return e({url:"/shijiesai/add",method:"post",data:i})}function a(i){return e({url:"/shijiesai/update",method:"post",data:i})}function r(i){return e({url:"/shijiesai/list",method:"get",params:i})}function o(i){return e({url:"/shijiesai/delete?id="+i,method:"delete"})}export{o as a,t as b,r as s,a as u};

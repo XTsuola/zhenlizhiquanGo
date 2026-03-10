@@ -1,0 +1,1 @@
+import{s as t}from"./index-BLB6NaLo.js";function a(r){return t({url:"/card/list?zhenyin="+r,method:"get"})}function d(){return t({url:"/cardAll/list",method:"get"})}function n(r){return t({url:"/card/grade",method:"post",data:r})}export{d as a,a as g,n as u};
