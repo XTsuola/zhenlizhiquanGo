@@ -77,7 +77,7 @@ func frequencyCardsUpdateTemp(c *gin.Context) {
 		}
 		result3 := my.DB.Table("password").Where("id = ?", obj.ID).Delete(nil)
 		if result3.Error != nil {
-			MyErr(result.Error.Error(), c)
+			MyErr(result3.Error.Error(), c)
 			return
 		}
 		HandleOk(c, "操作成功")

@@ -1,7 +1,7 @@
 package models
 
 type SkinBase struct {
-	CardId   int    `json:"cardId"  gorm:"column:cardId"`
+	CardId   int    `json:"cardId" gorm:"column:cardId"`
 	Name     string `json:"name"`
 	Zhenyin  int    `json:"zhenyin"`
 	Cost     int    `json:"cost"`
