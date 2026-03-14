@@ -20,6 +20,10 @@ type SkinDiyUpdate struct {
 	Password string `json:"password"`
 }
 
+type SkinDiyAddData struct {
+	Data []SkinDiyBase `json:"data"`
+}
+
 type CardDiyBase struct {
 	Name     string `json:"name"`
 	Zhenyin  int    `json:"zhenyin"`
@@ -43,4 +47,8 @@ type CardDiyUpdate struct {
 	ID int `json:"id" gorm:"primaryKey"`
 	CardDiyBase
 	Password string `json:"password"`
+}
+
+type CardDiyAddData struct {
+	Data []CardDiyBase `json:"data"`
 }

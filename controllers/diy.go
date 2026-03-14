@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	my "go_project/config"
 	"go_project/models"
+	"time"
 )
 
 func skinDiyList(c *gin.Context) {
@@ -26,6 +27,30 @@ func skinDiyAdd(c *gin.Context) {
 	if result.Error != nil {
 		MyErr(result.Error.Error(), c)
 		return
+	}
+	HandleOk(c, "新增成功")
+}
+
+func skinDiyAddAll(c *gin.Context) {
+	var params models.SkinDiyAddData
+	if err := c.ShouldBindJSON(&params); err != nil {
+		MyErr(err.Error(), c)
+		return
+	}
+	var data models.SkinDiyBase
+	for _, item := range params.Data {
+		time.Sleep(50 * time.Millisecond)
+		data.CardId = item.CardId
+		data.Name = item.Name
+		data.Skill = item.Skill
+		data.Effect = item.Effect
+		data.Reason = item.Reason
+		data.Remark = item.Remark
+		result := my.DB.Table("skin_diy").Create(&data)
+		if result.Error != nil {
+			MyErr(result.Error.Error(), c)
+			return
+		}
 	}
 	HandleOk(c, "新增成功")
 }
@@ -113,6 +138,35 @@ func cardDiyAdd(c *gin.Context) {
 	if result.Error != nil {
 		MyErr(result.Error.Error(), c)
 		return
+	}
+	HandleOk(c, "新增成功")
+}
+
+func cardDiyAddAll(c *gin.Context) {
+	var params models.CardDiyAddData
+	if err := c.ShouldBindJSON(&params); err != nil {
+		MyErr(err.Error(), c)
+		return
+	}
+	var data models.CardDiyBase
+	for _, item := range params.Data {
+		time.Sleep(50 * time.Millisecond)
+		data.Name = item.Name
+		data.Zhenyin = item.Zhenyin
+		data.Cost = item.Cost
+		data.Quality = item.Quality
+		data.CardType = item.CardType
+		data.Att = item.Att
+		data.Life = item.Life
+		data.Effect = item.Effect
+		data.Info = item.Info
+		data.Remark = item.Remark
+		data.Img = item.Img
+		result := my.DB.Table("card_diy").Create(&data)
+		if result.Error != nil {
+			MyErr(result.Error.Error(), c)
+			return
+		}
 	}
 	HandleOk(c, "新增成功")
 }

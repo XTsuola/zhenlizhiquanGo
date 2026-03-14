@@ -27,27 +27,10 @@ func skinList(c *gin.Context) {
 		obj.Shuxing = item.Shuxing
 		obj.Origin = item.Origin
 		obj.Remark = item.Remark
-		obj.Together = item.Together
 		obj.Effect = StringToArr[string](item.Effect)
 		data = append(data, obj)
 	}
 	SearchList[models.SkinAll]("查询成功", c, data)
-}
-
-func skinTogether(c *gin.Context) {
-	var params models.SkinTogetherParams
-	if err := c.ShouldBindJSON(&params); err != nil {
-		MyErr(err.Error(), c)
-		return
-	}
-	result := my.DB.Table("skin").Where("id = ?", params.ID).Updates(map[string]interface{}{
-		"together": params.Together,
-	})
-	if result.Error != nil {
-		MyErr(result.Error.Error(), c)
-		return
-	}
-	HandleOk(c, "操作成功")
 }
 
 func skinAdd(c *gin.Context) {
@@ -69,7 +52,6 @@ func skinAdd(c *gin.Context) {
 		data.Origin = item.Origin
 		data.Effect = ArrToString(item.Effect)
 		data.Remark = item.Remark
-		data.Together = item.Together
 		result := my.DB.Table("skin").Create(&data)
 		if result.Error != nil {
 			MyErr(result.Error.Error(), c)
@@ -77,23 +59,4 @@ func skinAdd(c *gin.Context) {
 		}
 	}
 	HandleOk(c, "新增成功")
-}
-
-func skinTogetherAll(c *gin.Context) {
-	var params models.SkinUpdateData
-	if err := c.ShouldBindJSON(&params); err != nil {
-		MyErr(err.Error(), c)
-		return
-	}
-	for _, item := range params.Data {
-		time.Sleep(50 * time.Millisecond)
-		result := my.DB.Table("skin").Where("id = ?", item.ID).Updates(map[string]interface{}{
-			"together": item.Together,
-		})
-		if result.Error != nil {
-			MyErr(result.Error.Error(), c)
-			return
-		}
-	}
-	HandleOk(c, "操作成功")
 }
