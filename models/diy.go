@@ -1,7 +1,7 @@
 package models
 
 type SkinDiyBase struct {
-	CardId int    `json:"cardId" gorm:"column:cardId"`
+	CardId string `json:"cardId" gorm:"column:cardId"`
 	Name   string `json:"name"`
 	Skill  string `json:"skill"`
 	Effect string `json:"effect"`
@@ -17,5 +17,30 @@ type SkinDiyAll struct {
 type SkinDiyUpdate struct {
 	ID int `json:"id" gorm:"primaryKey"`
 	SkinDiyBase
+	Password string `json:"password"`
+}
+
+type CardDiyBase struct {
+	Name     string `json:"name"`
+	Zhenyin  int    `json:"zhenyin"`
+	Cost     int    `json:"cost"`
+	Quality  int    `json:"quality"`
+	CardType int    `json:"cardType" gorm:"column:cardType"`
+	Att      int    `json:"att"`
+	Life     int    `json:"life"`
+	Effect   string `json:"effect"`
+	Img      string `json:"img"`
+	Info     string `json:"info"`
+	Remark   string `json:"remark"`
+}
+
+type CardDiyAll struct {
+	ID int `json:"id" gorm:"primaryKey"`
+	CardDiyBase
+}
+
+type CardDiyUpdate struct {
+	ID int `json:"id" gorm:"primaryKey"`
+	CardDiyBase
 	Password string `json:"password"`
 }

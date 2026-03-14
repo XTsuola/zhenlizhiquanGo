@@ -92,3 +92,98 @@ func skinDiyUpdateTemp(c *gin.Context) {
 		HandleOk(c, "操作成功")
 	}
 }
+
+func cardDiyList(c *gin.Context) {
+	var data []models.CardDiyAll
+	result := my.DB.Table("card_diy").Find(&data)
+	if result.Error != nil {
+		MyErr(result.Error.Error(), c)
+		return
+	}
+	SearchList[models.CardDiyAll]("查询成功", c, data)
+}
+
+func cardDiyAdd(c *gin.Context) {
+	var params models.CardDiyBase
+	if err := c.ShouldBindJSON(&params); err != nil {
+		MyErr(err.Error(), c)
+		return
+	}
+	result := my.DB.Table("card_diy").Create(&params)
+	if result.Error != nil {
+		MyErr(result.Error.Error(), c)
+		return
+	}
+	HandleOk(c, "新增成功")
+}
+
+func cardDiyUpdate(c *gin.Context) {
+	var params models.CardDiyUpdate
+	if err := c.ShouldBindJSON(&params); err != nil {
+		MyErr(err.Error(), c)
+		return
+	}
+	if params.Password != "suola18" {
+		MyErr("管理员密码错误", c)
+		return
+	} else {
+		result := my.DB.Table("card_diy").Where("id = ?", params.ID).Updates(map[string]interface{}{
+			"name":     params.Name,
+			"zhenyin":  params.Zhenyin,
+			"cost":     params.Cost,
+			"quality":  params.Quality,
+			"cardType": params.CardType,
+			"att":      params.Att,
+			"life":     params.Life,
+			"effect":   params.Effect,
+			"info":     params.Info,
+			"remark":   params.Remark,
+		})
+		if result.Error != nil {
+			MyErr(result.Error.Error(), c)
+			return
+		}
+		HandleOk(c, "操作成功")
+	}
+}
+
+func cardDiyUpdateTemp(c *gin.Context) {
+	var params models.CardDiyUpdate
+	if err := c.ShouldBindJSON(&params); err != nil {
+		MyErr(err.Error(), c)
+		return
+	}
+	var obj models.FrequencyPaddwordAll
+	result := my.DB.Table("password").Where("password = ?", params.Password).Find(&obj)
+	if result.Error != nil {
+		MyErr(result.Error.Error(), c)
+		return
+	}
+	if result.RowsAffected == 0 {
+		MyErr("临时密码错误", c)
+		return
+	} else {
+		result2 := my.DB.Table("card_diy").Where("id = ?", params.ID).Updates(map[string]interface{}{
+			"name":     params.Name,
+			"zhenyin":  params.Zhenyin,
+			"cost":     params.Cost,
+			"quality":  params.Quality,
+			"cardType": params.CardType,
+			"att":      params.Att,
+			"life":     params.Life,
+			"effect":   params.Effect,
+			"info":     params.Info,
+			"remark":   params.Remark,
+		})
+		if result2.Error != nil {
+			MyErr(result2.Error.Error(), c)
+			return
+		}
+		result3 := my.DB.Table("password").Where("id = ?", obj.ID).Delete(nil)
+		if result3.Error != nil {
+			MyErr(result3.Error.Error(), c)
+			return
+		}
+		HandleOk(c, "操作成功")
+	}
+}
