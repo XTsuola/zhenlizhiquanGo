@@ -62,4 +62,8 @@ func InitController() {
 	R.POST("/shijiesai/addList", shijiesaiAddList)
 	R.GET("/log/list", logList)
 	R.GET("/log/add", logAdd)
+	R.GET("/question/list", questionList)
+	R.POST("/question/add", questionAdd)
+	R.GET("/question/detail", questionDetail)
+	R.GET("/question/answer", questionAnswer)
 }

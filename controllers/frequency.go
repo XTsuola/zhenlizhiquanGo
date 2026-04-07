@@ -1,11 +1,12 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	my "go_project/config"
 	"go_project/models"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func frequencyCardsAdd(c *gin.Context) {
