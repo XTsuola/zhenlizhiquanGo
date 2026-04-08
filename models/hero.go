@@ -40,13 +40,21 @@ type HeroAddObj struct {
 }
 
 type ShardBase struct {
-	ID        int    `json:"id" gorm:"primaryKey"`
 	Quality   int    `json:"quality"`
 	LevelData string `json:"levelData" gorm:"column:levelData"`
 	SkillData string `json:"skillData" gorm:"column:skillData"`
 }
 
+type ShardAll struct {
+	ID int `json:"id" gorm:"primaryKey"`
+	ShardBase
+}
+
 type ShardUpdateParams struct {
 	ID        int    `json:"id" gorm:"primaryKey"`
 	SkillData string `json:"skillData" gorm:"column:skillData"`
+}
+
+type ShardAddData struct {
+	Data []ShardBase `json:"data"`
 }

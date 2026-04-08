@@ -1,10 +1,11 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	my "go_project/config"
 	"go_project/models"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func heroList(c *gin.Context) {
@@ -56,13 +57,13 @@ func heroAdd(c *gin.Context) {
 }
 
 func shardList(c *gin.Context) {
-	var list []models.ShardBase
+	var list []models.ShardAll
 	result := my.DB.Table("shard").Find(&list)
 	if result.Error != nil {
 		MyErr(result.Error.Error(), c)
 		return
 	}
-	SearchList[models.ShardBase]("查询成功", c, list)
+	SearchList[models.ShardAll]("查询成功", c, list)
 }
 
 func shardUpdate(c *gin.Context) {
@@ -79,4 +80,25 @@ func shardUpdate(c *gin.Context) {
 		return
 	}
 	HandleOk(c, "操作成功")
+}
+
+func shardAdd(c *gin.Context) {
+	var params models.ShardAddData
+	if err := c.ShouldBindJSON(&params); err != nil {
+		MyErr(err.Error(), c)
+		return
+	}
+	var data models.ShardBase
+	for _, item := range params.Data {
+		time.Sleep(50 * time.Millisecond)
+		data.Quality = item.Quality
+		data.LevelData = item.LevelData
+		data.SkillData = item.SkillData
+		result := my.DB.Table("shard").Create(&data)
+		if result.Error != nil {
+			MyErr(result.Error.Error(), c)
+			return
+		}
+	}
+	HandleOk(c, "新增成功")
 }
