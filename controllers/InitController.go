@@ -66,5 +66,7 @@ func InitController() {
 	R.GET("/question/list", questionList)
 	R.POST("/question/add", questionAdd)
 	R.GET("/question/detail", questionDetail)
-	R.GET("/question/answer", questionAnswer)
+	R.GET("/answer/list/:questionId/", answerList)
+	R.POST("/answer/add", answerAdd)
+	R.POST("/answer/addAll", answerAddAll)
 }

@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	"fmt"
 	my "go_project/config"
 	"go_project/models"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,6 +25,7 @@ func questionAdd(c *gin.Context) {
 		MyErr(err.Error(), c)
 		return
 	}
+	fmt.Println(params)
 	result := my.DB.Table("question").Create(&params)
 	if result.Error != nil {
 		MyErr(result.Error.Error(), c)
@@ -34,14 +37,58 @@ func questionAdd(c *gin.Context) {
 func questionDetail(c *gin.Context) {
 	var data models.QuestionAll
 	_ = my.DB.Table("question").Order("id desc").First(&data)
+	fmt.Println(data)
 	SearchOne[models.QuestionAll]("查询成功", c, data)
 }
 
-func questionAnswer(c *gin.Context) {
-
+func answerAdd(c *gin.Context) {
+	var params models.AnswerBase
+	if err := c.ShouldBindJSON(&params); err != nil {
+		MyErr(err.Error(), c)
+		return
+	}
+	result := my.DB.Table("answer").Create(&params)
+	if result.Error != nil {
+		MyErr(result.Error.Error(), c)
+		return
+	}
+	HandleOk(c, "新增成功")
 }
 
-//func noteDelete(c *gin.Context) {
+func answerList(c *gin.Context) {
+	questionId := c.Param("questionId")
+	var data []models.AnswerAll
+	result := my.DB.Table("answer").Where("questionId = ?", questionId).Find(&data)
+	if result.Error != nil {
+		MyErr(result.Error.Error(), c)
+		return
+	}
+	SearchList[models.AnswerAll]("查询成功", c, data)
+}
+
+func answerAddAll(c *gin.Context) {
+	var params models.AnswerAddData
+	if err := c.ShouldBindJSON(&params); err != nil {
+		MyErr(err.Error(), c)
+		return
+	}
+	var data models.AnswerBase
+	for _, item := range params.Data {
+		time.Sleep(50 * time.Millisecond)
+		data.QuestionId = item.QuestionId
+		data.Name = item.Name
+		data.Content = item.Content
+		data.Time = item.Time
+		result := my.DB.Table("answer").Create(&data)
+		if result.Error != nil {
+			MyErr(result.Error.Error(), c)
+			return
+		}
+	}
+	HandleOk(c, "新增成功")
+}
+
+//func answerDelete(c *gin.Context) {
 //	id, _ := strconv.Atoi(c.Query("id"))
 //	result := my.DB.Table("note").Where("id = ?", id).Delete(nil)
 //	if result.Error != nil {

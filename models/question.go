@@ -11,8 +11,17 @@ type QuestionAll struct {
 }
 
 type AnswerBase struct {
-	QuestionId int    `json:"questionId" gorm:"column:questionI"`
+	QuestionId int    `json:"questionId" gorm:"column:questionId"`
 	Name       string `json:"name"`
 	Content    string `json:"content"`
 	Time       string `json:"time"`
+}
+
+type AnswerAll struct {
+	ID int `json:"id" gorm:"primaryKey"`
+	AnswerBase
+}
+
+type AnswerAddData struct {
+	Data []AnswerBase `json:"data"`
 }
