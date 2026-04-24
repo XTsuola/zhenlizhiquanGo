@@ -6,6 +6,7 @@ type ShenqiBase struct {
 	Quality int    `json:"quality"`
 	Type    int    `json:"type"`
 	Img     string `json:"img"`
+	Bonus   string `json:"bonus"`
 }
 
 type ShenqiData struct {

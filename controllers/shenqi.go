@@ -25,6 +25,7 @@ func shenqiList(c *gin.Context) {
 		obj.Quality = item.Quality
 		obj.Type = item.Type
 		obj.Img = item.Img
+		obj.Bonus = item.Bonus
 		obj.Data = StringToArr[models.ShenqiData](item.Data)
 		data = append(data, obj)
 	}
@@ -45,6 +46,7 @@ func shenqiAdd(c *gin.Context) {
 		data.Quality = item.Quality
 		data.Type = item.Type
 		data.Img = item.Img
+		data.Bonus = item.Bonus
 		data.Data = ArrToString[models.ShenqiData](item.Data)
 		result := my.DB.Table("shenqi").Create(&data)
 		if result.Error != nil {
