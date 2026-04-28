@@ -10,6 +10,10 @@ type QuestionAll struct {
 	QuestionBase
 }
 
+type QuestionAddData struct {
+	Data []QuestionBase `json:"data"`
+}
+
 type AnswerBase struct {
 	QuestionId int    `json:"questionId" gorm:"column:questionId"`
 	Name       string `json:"name"`

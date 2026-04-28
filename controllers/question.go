@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	my "go_project/config"
 	"go_project/models"
 	"time"
@@ -25,7 +24,6 @@ func questionAdd(c *gin.Context) {
 		MyErr(err.Error(), c)
 		return
 	}
-	fmt.Println(params)
 	result := my.DB.Table("question").Create(&params)
 	if result.Error != nil {
 		MyErr(result.Error.Error(), c)
@@ -37,8 +35,27 @@ func questionAdd(c *gin.Context) {
 func questionDetail(c *gin.Context) {
 	var data models.QuestionAll
 	_ = my.DB.Table("question").Order("id desc").First(&data)
-	fmt.Println(data)
 	SearchOne[models.QuestionAll]("查询成功", c, data)
+}
+
+func questionAddAll(c *gin.Context) {
+	var params models.QuestionAddData
+	if err := c.ShouldBindJSON(&params); err != nil {
+		MyErr(err.Error(), c)
+		return
+	}
+	var data models.QuestionBase
+	for _, item := range params.Data {
+		time.Sleep(50 * time.Millisecond)
+		data.Info = item.Info
+		data.Time = item.Time
+		result := my.DB.Table("question").Create(&data)
+		if result.Error != nil {
+			MyErr(result.Error.Error(), c)
+			return
+		}
+	}
+	HandleOk(c, "新增成功")
 }
 
 func answerAdd(c *gin.Context) {
@@ -58,7 +75,7 @@ func answerAdd(c *gin.Context) {
 func answerList(c *gin.Context) {
 	questionId := c.Param("questionId")
 	var data []models.AnswerAll
-	result := my.DB.Table("answer").Where("questionId = ?", questionId).Find(&data)
+	result := my.DB.Table("answer").Where("questionId = ?", questionId).Order("time DESC").Find(&data)
 	if result.Error != nil {
 		MyErr(result.Error.Error(), c)
 		return
@@ -88,12 +105,12 @@ func answerAddAll(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
-//func answerDelete(c *gin.Context) {
-//	id, _ := strconv.Atoi(c.Query("id"))
-//	result := my.DB.Table("note").Where("id = ?", id).Delete(nil)
-//	if result.Error != nil {
-//		MyErr(result.Error.Error(), c)
-//		return
-//	}
-//	HandleOk(c, "删除成功")
-//}
+func answerAllList(c *gin.Context) {
+	var data []models.AnswerAll
+	result := my.DB.Table("answer").Order("time DESC").Find(&data)
+	if result.Error != nil {
+		MyErr(result.Error.Error(), c)
+		return
+	}
+	SearchList[models.AnswerAll]("查询成功", c, data)
+}

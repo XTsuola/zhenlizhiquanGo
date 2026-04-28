@@ -127,7 +127,6 @@ func moPai(userId int) {
 
 // 出牌
 func chuPai(myId int, pai int, obj models.QingshuMapData, youPari int, index int) models.QingshuMapData {
-	fmt.Println(myId, pai, youPari, index, "kkk")
 	var params models.QingshuMapData
 	params.CardPile = obj.CardPile
 	params.DisPile = obj.DisPile
