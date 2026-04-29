@@ -3,6 +3,7 @@ package controllers
 import (
 	my "go_project/config"
 	"go_project/models"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -73,7 +74,7 @@ func answerAdd(c *gin.Context) {
 }
 
 func answerList(c *gin.Context) {
-	questionId := c.Param("questionId")
+	questionId, _ := strconv.Atoi(c.Query("questionId"))
 	var data []models.AnswerAll
 	result := my.DB.Table("answer").Where("questionId = ?", questionId).Order("time DESC").Find(&data)
 	if result.Error != nil {
