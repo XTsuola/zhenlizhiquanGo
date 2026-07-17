@@ -1,10 +1,11 @@
 package models
 
 type MemberBase struct {
-	Name   string  `json:"name"`
-	Score  float64 `json:"score"`
-	Title  string  `json:"title"`
-	Remark string  `json:"remark"`
+	Name     string  `json:"name"`
+	Donation float64 `json:"donation"`
+	Score    float64 `json:"score"`
+	Title    string  `json:"title"`
+	Remark   string  `json:"remark"`
 }
 
 type MemberAll struct {

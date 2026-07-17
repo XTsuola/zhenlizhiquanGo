@@ -1,15 +1,16 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	my "go_project/config"
 	"go_project/models"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func memberList(c *gin.Context) {
 	var data []models.MemberAll
-	result := my.DB.Table("member").Order("score desc").Find(&data)
+	result := my.DB.Table("member").Order("donation desc, score desc").Find(&data)
 	if result.Error != nil {
 		MyErr(result.Error.Error(), c)
 		return
@@ -39,10 +40,11 @@ func memberUpdate(c *gin.Context) {
 		return
 	}
 	result := my.DB.Table("member").Where("id = ?", id).Updates(map[string]interface{}{
-		"name":   params.Name,
-		"score":  params.Score,
-		"title":  params.Title,
-		"remark": params.Remark,
+		"name":     params.Name,
+		"donation": params.Donation,
+		"score":    params.Score,
+		"title":    params.Title,
+		"remark":   params.Remark,
 	})
 	if result.Error != nil {
 		MyErr(result.Error.Error(), c)
@@ -71,6 +73,7 @@ func memberAddAll(c *gin.Context) {
 	for _, item := range params.Data {
 		time.Sleep(50 * time.Millisecond)
 		data.Name = item.Name
+		data.Donation = item.Donation
 		data.Score = item.Score
 		data.Title = item.Title
 		data.Remark = item.Remark
