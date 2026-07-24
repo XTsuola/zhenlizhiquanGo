@@ -3,15 +3,16 @@ package controllers
 import (
 	my "go_project/config"
 	"go_project/models"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 func shenqiList(c *gin.Context) {
-	//id, _ := strconv.Atoi(c.Query("zhenyin"))
+	id, _ := strconv.Atoi(c.Query("zhenyin"))
 	var list []models.ShenqiSelect
-	result := my.DB.Table("shenqi").Find(&list)
+	result := my.DB.Table("shenqi").Where("zhenyin = ?", id).Find(&list)
 	if result.Error != nil {
 		MyErr(result.Error.Error(), c)
 		return
