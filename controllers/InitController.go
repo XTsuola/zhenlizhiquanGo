@@ -76,5 +76,5 @@ func InitController() {
 	R.POST("/member/update/:id/", memberUpdate)
 	R.POST("/member/addAll", memberAddAll)
 	R.DELETE("/member/delete/:id/", memberDelete)
-	R.POST("/ai/query", aiQueryHandler)
+	//R.POST("/ai/query", aiQueryHandler)
 }
