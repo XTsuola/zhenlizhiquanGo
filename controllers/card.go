@@ -1,120 +1,75 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	my "go_project/config"
 	"go_project/models"
-	"strconv"
-	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func cardList(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Query("zhenyin"))
+	id := queryInt(c, "zhenyin")
 	var list []models.CardSelect
-	result := my.DB.Table("card").Where("zhenyin = ?", id).Find(&list)
-	if result.Error != nil {
-		MyErr(result.Error.Error(), c)
-		return
-	}
-	var data []models.CardAll
-	for _, item := range list {
-		var obj models.CardAll
-		obj.ID = item.ID
-		obj.Name = item.Name
-		obj.Zhenyin = item.Zhenyin
-		obj.Quality = item.Quality
-		obj.Cost = item.Cost
-		obj.Type = item.Type
-		obj.Img = item.Img
-		obj.Grade = item.Grade
-		obj.Tag = item.Tag
-		obj.Data = StringToArr[models.CardData](item.Data)
-		data = append(data, obj)
-	}
-	SearchList[models.CardAll]("查询成功", c, data)
-}
-
-func cardAllList(c *gin.Context) {
-	var list []models.CardSelect
-	result := my.DB.Table("card").Find(&list)
-	if result.Error != nil {
-		MyErr(result.Error.Error(), c)
-		return
-	}
-	var data []models.CardAll
-	for _, item := range list {
-		var obj models.CardAll
-		obj.ID = item.ID
-		obj.Name = item.Name
-		obj.Zhenyin = item.Zhenyin
-		obj.Quality = item.Quality
-		obj.Cost = item.Cost
-		obj.Type = item.Type
-		obj.Img = item.Img
-		obj.Grade = item.Grade
-		obj.Tag = item.Tag
-		obj.Data = StringToArr[models.CardData](item.Data)
-		data = append(data, obj)
-	}
-	SearchList[models.CardAll]("查询成功", c, data)
-}
-
-func cardAdd(c *gin.Context) {
-	var params models.CardAddData
-	if err := c.ShouldBindJSON(&params); err != nil {
+	if err := my.DB.Table("card").Where("zhenyin = ?", id).Find(&list).Error; err != nil {
 		MyErr(err.Error(), c)
 		return
 	}
-	var data models.CardAddObj
+	data := make([]models.CardAll, 0, len(list))
+	for _, item := range list {
+		data = append(data, item.ToAll())
+	}
+	SearchList("查询成功", c, data)
+}
+
+func cardAllList(c *gin.Context) {
+	list, ok := findAll[models.CardSelect]("card", c)
+	if !ok {
+		return
+	}
+	data := make([]models.CardAll, 0, len(list))
+	for _, item := range list {
+		data = append(data, item.ToAll())
+	}
+	SearchList("查询成功", c, data)
+}
+
+func cardAdd(c *gin.Context) {
+	params, ok := bindJSON[models.CardAddData](c)
+	if !ok {
+		return
+	}
+	rows := make([]models.CardAddObj, 0, len(params.Data))
 	for _, item := range params.Data {
-		time.Sleep(50 * time.Millisecond)
-		data.Name = item.Name
-		data.Zhenyin = item.Zhenyin
-		data.Quality = item.Quality
-		data.Cost = item.Cost
-		data.Type = item.Type
-		data.Img = item.Img
-		data.Grade = item.Grade
-		data.Tag = item.Tag
-		data.Data = ArrToString[models.CardData](item.Data)
-		result := my.DB.Table("card").Create(&data)
-		if result.Error != nil {
-			MyErr(result.Error.Error(), c)
-			return
-		}
+		rows = append(rows, item.ToObj())
+	}
+	if !createBatch("card", rows, c) {
+		return
 	}
 	HandleOk(c, "新增成功")
 }
 
 func cardGradeUpdate(c *gin.Context) {
-	var params models.CardUpdateGradeParams
-	if err := c.ShouldBindJSON(&params); err != nil {
-		MyErr(err.Error(), c)
+	params, ok := bindJSON[models.CardUpdateGradeParams](c)
+	if !ok {
 		return
 	}
-	result := my.DB.Table("card").Where("id = ?", params.ID).Updates(map[string]interface{}{
+	if !updateByID("card", params.ID, map[string]interface{}{
 		"grade": ArrToString(params.Grade),
-	})
-	if result.Error != nil {
-		MyErr(result.Error.Error(), c)
+	}, c) {
 		return
 	}
 	HandleOk(c, "操作成功")
 }
 
 func cardGradeUpdateList(c *gin.Context) {
-	var params models.CardUpdateGradeListData
-	if err := c.ShouldBindJSON(&params); err != nil {
-		MyErr(err.Error(), c)
+	params, ok := bindJSON[models.CardUpdateGradeListData](c)
+	if !ok {
 		return
 	}
 	for _, item := range params.Data {
-		time.Sleep(50 * time.Millisecond)
-		result := my.DB.Table("card").Where("id = ?", item.ID).Updates(map[string]interface{}{
+		if !updateByID("card", item.ID, map[string]interface{}{
 			"grade": item.Grade,
-		})
-		if result.Error != nil {
-			MyErr(result.Error.Error(), c)
+		}, c) {
 			return
 		}
 	}
@@ -122,37 +77,27 @@ func cardGradeUpdateList(c *gin.Context) {
 }
 
 func cardTagUpdate(c *gin.Context) {
-	var params models.CardUpdateTagParams
-	if err := c.ShouldBindJSON(&params); err != nil {
-		MyErr(err.Error(), c)
+	params, ok := bindJSON[models.CardUpdateTagParams](c)
+	if !ok {
 		return
 	}
-	var data models.CardUpdateTag
-	data.ID = params.ID
-	data.Tag = ArrToString(params.Tag)
-	result := my.DB.Table("card").Where("id = ?", params.ID).Updates(map[string]interface{}{
-		"tag": data.Tag,
-	})
-	if result.Error != nil {
-		MyErr(result.Error.Error(), c)
+	if !updateByID("card", params.ID, map[string]interface{}{
+		"tag": ArrToString(params.Tag),
+	}, c) {
 		return
 	}
 	HandleOk(c, "操作成功")
 }
 
 func cardTagUpdateList(c *gin.Context) {
-	var params models.CardUpdateTagListData
-	if err := c.ShouldBindJSON(&params); err != nil {
-		MyErr(err.Error(), c)
+	params, ok := bindJSON[models.CardUpdateTagListData](c)
+	if !ok {
 		return
 	}
 	for _, item := range params.Data {
-		time.Sleep(50 * time.Millisecond)
-		result := my.DB.Table("card").Where("id = ?", item.ID).Updates(map[string]interface{}{
+		if !updateByID("card", item.ID, map[string]interface{}{
 			"tag": item.Tag,
-		})
-		if result.Error != nil {
-			MyErr(result.Error.Error(), c)
+		}, c) {
 			return
 		}
 	}

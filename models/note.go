@@ -11,3 +11,5 @@ type NoteAll struct {
 	ID int `json:"id" gorm:"primaryKey"`
 	NoteBase
 }
+
+func (NoteAll) TableName() string { return "note" }

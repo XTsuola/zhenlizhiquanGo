@@ -3,37 +3,25 @@ package router
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
-	my "go_project/config"
-	"go_project/models"
 	"math/rand"
 	"net/http"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
+	my "go_project/config"
+	"go_project/models"
+	"go_project/utils"
 )
 
-// ArrToString 数组转字符串
 func ArrToString[T any](arr []T) string {
-	if len(arr) == 0 {
-		return `[]`
-	} else {
-		jsonBytes, _ := json.Marshal(arr)
-		jsonStr := string(jsonBytes)
-		return jsonStr
-	}
+	return utils.ArrToString(arr)
 }
 
-// StringToArr 字符串转数组
 func StringToArr[T any](str string) []T {
-	var arr []T
-	err := json.Unmarshal([]byte(str), &arr)
-	if err != nil || len(arr) == 0 {
-		fmt.Println(err)
-		arr = []T{}
-	}
-	return arr
+	return utils.StringToArr[T](str)
 }
 
 // 重置游戏

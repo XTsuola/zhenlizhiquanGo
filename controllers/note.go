@@ -1,41 +1,34 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
-	my "go_project/config"
 	"go_project/models"
-	"strconv"
+
+	my "go_project/config"
+	"github.com/gin-gonic/gin"
 )
 
 func noteList(c *gin.Context) {
-	var data []models.NoteAll
-	result := my.DB.Table("note").Find(&data)
-	if result.Error != nil {
-		MyErr(result.Error.Error(), c)
+	data, ok := findAll[models.NoteAll]("note", c)
+	if !ok {
 		return
 	}
-	SearchList[models.NoteAll]("查询成功", c, data)
+	SearchList("查询成功", c, data)
 }
 
 func noteAdd(c *gin.Context) {
-	var params models.NoteBase
-	if err := c.ShouldBindJSON(&params); err != nil {
-		MyErr(err.Error(), c)
+	params, ok := bindJSON[models.NoteBase](c)
+	if !ok {
 		return
 	}
-	result := my.DB.Table("note").Create(&params)
-	if result.Error != nil {
-		MyErr(result.Error.Error(), c)
+	if err := my.DB.Table("note").Create(&params).Error; err != nil {
+		MyErr(err.Error(), c)
 		return
 	}
 	HandleOk(c, "新增成功")
 }
 
 func noteDelete(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Query("id"))
-	result := my.DB.Table("note").Where("id = ?", id).Delete(nil)
-	if result.Error != nil {
-		MyErr(result.Error.Error(), c)
+	if !deleteByQuery("note", c, "id = ?", queryInt(c, "id")) {
 		return
 	}
 	HandleOk(c, "删除成功")

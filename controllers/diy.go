@@ -1,243 +1,160 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	my "go_project/config"
 	"go_project/models"
-	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func skinDiyList(c *gin.Context) {
-	var data []models.SkinDiyAll
-	result := my.DB.Table("skin_diy").Find(&data)
-	if result.Error != nil {
-		MyErr(result.Error.Error(), c)
+	data, ok := findAll[models.SkinDiyAll]("skin_diy", c)
+	if !ok {
 		return
 	}
-	SearchList[models.SkinDiyAll]("查询成功", c, data)
+	SearchList("查询成功", c, data)
 }
 
 func skinDiyAdd(c *gin.Context) {
-	var params models.SkinDiyBase
-	if err := c.ShouldBindJSON(&params); err != nil {
-		MyErr(err.Error(), c)
+	params, ok := bindJSON[models.SkinDiyBase](c)
+	if !ok {
 		return
 	}
-	result := my.DB.Table("skin_diy").Create(&params)
-	if result.Error != nil {
-		MyErr(result.Error.Error(), c)
+	if err := my.DB.Table("skin_diy").Create(&params).Error; err != nil {
+		MyErr(err.Error(), c)
 		return
 	}
 	HandleOk(c, "新增成功")
 }
 
 func skinDiyAddAll(c *gin.Context) {
-	var params models.SkinDiyAddData
-	if err := c.ShouldBindJSON(&params); err != nil {
-		MyErr(err.Error(), c)
+	params, ok := bindJSON[models.SkinDiyAddData](c)
+	if !ok {
 		return
 	}
-	var data models.SkinDiyBase
-	for _, item := range params.Data {
-		time.Sleep(50 * time.Millisecond)
-		data.CardId = item.CardId
-		data.Name = item.Name
-		data.Skill = item.Skill
-		data.Effect = item.Effect
-		data.Reason = item.Reason
-		data.Remark = item.Remark
-		result := my.DB.Table("skin_diy").Create(&data)
-		if result.Error != nil {
-			MyErr(result.Error.Error(), c)
-			return
-		}
+	if !createBatch("skin_diy", params.Data, c) {
+		return
 	}
 	HandleOk(c, "新增成功")
 }
 
+func skinDiyFields(params models.SkinDiyUpdate) map[string]interface{} {
+	return map[string]interface{}{
+		"cardId": params.CardId,
+		"name":   params.Name,
+		"skill":  params.Skill,
+		"effect": params.Effect,
+		"reason": params.Reason,
+		"remark": params.Remark,
+	}
+}
+
 func skinDiyUpdate(c *gin.Context) {
-	var params models.SkinDiyUpdate
-	if err := c.ShouldBindJSON(&params); err != nil {
-		MyErr(err.Error(), c)
+	params, ok := bindJSON[models.SkinDiyUpdate](c)
+	if !ok {
 		return
 	}
-	if params.Password != "suola18" {
-		MyErr("管理员密码错误", c)
+	if !requireAdminPassword(params.Password, c) {
 		return
-	} else {
-		result := my.DB.Table("skin_diy").Where("id = ?", params.ID).Updates(map[string]interface{}{
-			"cardId": params.CardId,
-			"name":   params.Name,
-			"skill":  params.Skill,
-			"effect": params.Effect,
-			"reason": params.Reason,
-			"remark": params.Remark,
-		})
-		if result.Error != nil {
-			MyErr(result.Error.Error(), c)
-			return
-		}
-		HandleOk(c, "操作成功")
 	}
+	if !updateByID("skin_diy", params.ID, skinDiyFields(params), c) {
+		return
+	}
+	HandleOk(c, "操作成功")
 }
 
 func skinDiyUpdateTemp(c *gin.Context) {
-	var params models.SkinDiyUpdate
-	if err := c.ShouldBindJSON(&params); err != nil {
-		MyErr(err.Error(), c)
+	params, ok := bindJSON[models.SkinDiyUpdate](c)
+	if !ok {
 		return
 	}
-	var obj models.FrequencyPaddwordAll
-	result := my.DB.Table("password").Where("password = ?", params.Password).Find(&obj)
-	if result.Error != nil {
-		MyErr(result.Error.Error(), c)
+	pwdID, ok := consumeTempPassword(params.Password, c)
+	if !ok {
 		return
 	}
-	if result.RowsAffected == 0 {
-		MyErr("临时密码错误", c)
+	if !updateByID("skin_diy", params.ID, skinDiyFields(params), c) {
 		return
-	} else {
-		result2 := my.DB.Table("skin_diy").Where("id = ?", params.ID).Updates(map[string]interface{}{
-			"cardId": params.CardId,
-			"name":   params.Name,
-			"skill":  params.Skill,
-			"effect": params.Effect,
-			"reason": params.Reason,
-			"remark": params.Remark,
-		})
-		if result2.Error != nil {
-			MyErr(result2.Error.Error(), c)
-			return
-		}
-		result3 := my.DB.Table("password").Where("id = ?", obj.ID).Delete(nil)
-		if result3.Error != nil {
-			MyErr(result3.Error.Error(), c)
-			return
-		}
-		HandleOk(c, "操作成功")
 	}
+	if !deleteTempPassword(pwdID, c) {
+		return
+	}
+	HandleOk(c, "操作成功")
 }
 
 func cardDiyList(c *gin.Context) {
-	var data []models.CardDiyAll
-	result := my.DB.Table("card_diy").Find(&data)
-	if result.Error != nil {
-		MyErr(result.Error.Error(), c)
+	data, ok := findAll[models.CardDiyAll]("card_diy", c)
+	if !ok {
 		return
 	}
-	SearchList[models.CardDiyAll]("查询成功", c, data)
+	SearchList("查询成功", c, data)
 }
 
 func cardDiyAdd(c *gin.Context) {
-	var params models.CardDiyBase
-	if err := c.ShouldBindJSON(&params); err != nil {
-		MyErr(err.Error(), c)
+	params, ok := bindJSON[models.CardDiyBase](c)
+	if !ok {
 		return
 	}
-	result := my.DB.Table("card_diy").Create(&params)
-	if result.Error != nil {
-		MyErr(result.Error.Error(), c)
+	if err := my.DB.Table("card_diy").Create(&params).Error; err != nil {
+		MyErr(err.Error(), c)
 		return
 	}
 	HandleOk(c, "新增成功")
 }
 
 func cardDiyAddAll(c *gin.Context) {
-	var params models.CardDiyAddData
-	if err := c.ShouldBindJSON(&params); err != nil {
-		MyErr(err.Error(), c)
+	params, ok := bindJSON[models.CardDiyAddData](c)
+	if !ok {
 		return
 	}
-	var data models.CardDiyBase
-	for _, item := range params.Data {
-		time.Sleep(50 * time.Millisecond)
-		data.Name = item.Name
-		data.Zhenyin = item.Zhenyin
-		data.Cost = item.Cost
-		data.Quality = item.Quality
-		data.CardType = item.CardType
-		data.Att = item.Att
-		data.Life = item.Life
-		data.Effect = item.Effect
-		data.Info = item.Info
-		data.Remark = item.Remark
-		data.Img = item.Img
-		result := my.DB.Table("card_diy").Create(&data)
-		if result.Error != nil {
-			MyErr(result.Error.Error(), c)
-			return
-		}
+	if !createBatch("card_diy", params.Data, c) {
+		return
 	}
 	HandleOk(c, "新增成功")
 }
 
-func cardDiyUpdate(c *gin.Context) {
-	var params models.CardDiyUpdate
-	if err := c.ShouldBindJSON(&params); err != nil {
-		MyErr(err.Error(), c)
-		return
-	}
-	if params.Password != "suola18" {
-		MyErr("管理员密码错误", c)
-		return
-	} else {
-		result := my.DB.Table("card_diy").Where("id = ?", params.ID).Updates(map[string]interface{}{
-			"name":     params.Name,
-			"zhenyin":  params.Zhenyin,
-			"cost":     params.Cost,
-			"quality":  params.Quality,
-			"cardType": params.CardType,
-			"att":      params.Att,
-			"life":     params.Life,
-			"effect":   params.Effect,
-			"info":     params.Info,
-			"remark":   params.Remark,
-		})
-		if result.Error != nil {
-			MyErr(result.Error.Error(), c)
-			return
-		}
-		HandleOk(c, "操作成功")
+func cardDiyFields(params models.CardDiyUpdate) map[string]interface{} {
+	return map[string]interface{}{
+		"name":     params.Name,
+		"zhenyin":  params.Zhenyin,
+		"cost":     params.Cost,
+		"quality":  params.Quality,
+		"cardType": params.CardType,
+		"att":      params.Att,
+		"life":     params.Life,
+		"effect":   params.Effect,
+		"info":     params.Info,
+		"remark":   params.Remark,
 	}
 }
 
+func cardDiyUpdate(c *gin.Context) {
+	params, ok := bindJSON[models.CardDiyUpdate](c)
+	if !ok {
+		return
+	}
+	if !requireAdminPassword(params.Password, c) {
+		return
+	}
+	if !updateByID("card_diy", params.ID, cardDiyFields(params), c) {
+		return
+	}
+	HandleOk(c, "操作成功")
+}
+
 func cardDiyUpdateTemp(c *gin.Context) {
-	var params models.CardDiyUpdate
-	if err := c.ShouldBindJSON(&params); err != nil {
-		MyErr(err.Error(), c)
+	params, ok := bindJSON[models.CardDiyUpdate](c)
+	if !ok {
 		return
 	}
-	var obj models.FrequencyPaddwordAll
-	result := my.DB.Table("password").Where("password = ?", params.Password).Find(&obj)
-	if result.Error != nil {
-		MyErr(result.Error.Error(), c)
+	pwdID, ok := consumeTempPassword(params.Password, c)
+	if !ok {
 		return
 	}
-	if result.RowsAffected == 0 {
-		MyErr("临时密码错误", c)
+	if !updateByID("card_diy", params.ID, cardDiyFields(params), c) {
 		return
-	} else {
-		result2 := my.DB.Table("card_diy").Where("id = ?", params.ID).Updates(map[string]interface{}{
-			"name":     params.Name,
-			"zhenyin":  params.Zhenyin,
-			"cost":     params.Cost,
-			"quality":  params.Quality,
-			"cardType": params.CardType,
-			"att":      params.Att,
-			"life":     params.Life,
-			"effect":   params.Effect,
-			"info":     params.Info,
-			"remark":   params.Remark,
-		})
-		if result2.Error != nil {
-			MyErr(result2.Error.Error(), c)
-			return
-		}
-		result3 := my.DB.Table("password").Where("id = ?", obj.ID).Delete(nil)
-		if result3.Error != nil {
-			MyErr(result3.Error.Error(), c)
-			return
-		}
-		HandleOk(c, "操作成功")
 	}
+	if !deleteTempPassword(pwdID, c) {
+		return
+	}
+	HandleOk(c, "操作成功")
 }

@@ -13,6 +13,8 @@ type MemberAll struct {
 	MemberBase
 }
 
+func (MemberAll) TableName() string { return "member" }
+
 type MemberAddData struct {
 	Data []MemberBase `json:"data"`
 }

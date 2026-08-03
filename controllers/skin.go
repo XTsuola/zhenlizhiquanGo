@@ -1,62 +1,34 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
-	my "go_project/config"
 	"go_project/models"
-	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func skinList(c *gin.Context) {
-	var list []models.SkinSelect
-	result := my.DB.Table("skin").Find(&list)
-	if result.Error != nil {
-		MyErr(result.Error.Error(), c)
+	list, ok := findAll[models.SkinSelect]("skin", c)
+	if !ok {
 		return
 	}
-	var data []models.SkinAll
+	data := make([]models.SkinAll, 0, len(list))
 	for _, item := range list {
-		var obj models.SkinAll
-		obj.ID = item.ID
-		obj.CardId = item.CardId
-		obj.Name = item.Name
-		obj.Zhenyin = item.Zhenyin
-		obj.Cost = item.Cost
-		obj.Skill = item.Skill
-		obj.Img = item.Img
-		obj.Shuxing = item.Shuxing
-		obj.Origin = item.Origin
-		obj.Remark = item.Remark
-		obj.Effect = StringToArr[string](item.Effect)
-		data = append(data, obj)
+		data = append(data, item.ToAll())
 	}
-	SearchList[models.SkinAll]("查询成功", c, data)
+	SearchList("查询成功", c, data)
 }
 
 func skinAdd(c *gin.Context) {
-	var params models.SkinAddData
-	if err := c.ShouldBindJSON(&params); err != nil {
-		MyErr(err.Error(), c)
+	params, ok := bindJSON[models.SkinAddData](c)
+	if !ok {
 		return
 	}
-	var data models.SkinAddObj
+	rows := make([]models.SkinAddObj, 0, len(params.Data))
 	for _, item := range params.Data {
-		time.Sleep(50 * time.Millisecond)
-		data.CardId = item.CardId
-		data.Name = item.Name
-		data.Zhenyin = item.Zhenyin
-		data.Cost = item.Cost
-		data.Skill = item.Skill
-		data.Img = item.Img
-		data.Shuxing = item.Shuxing
-		data.Origin = item.Origin
-		data.Effect = ArrToString(item.Effect)
-		data.Remark = item.Remark
-		result := my.DB.Table("skin").Create(&data)
-		if result.Error != nil {
-			MyErr(result.Error.Error(), c)
-			return
-		}
+		rows = append(rows, item.ToObj())
+	}
+	if !createBatch("skin", rows, c) {
+		return
 	}
 	HandleOk(c, "新增成功")
 }

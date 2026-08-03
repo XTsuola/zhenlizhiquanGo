@@ -5,7 +5,7 @@ type FrequencyBase struct {
 	Qu       int    `json:"qu"`
 	HeroId   int    `json:"heroId" gorm:"column:heroId"`
 	HeroLife int    `json:"heroLife" gorm:"column:heroLife"`
-	Cards    string `json:"cards"`
+	Cards    string `json:"cards"` // JSON 字符串
 	Time     string `json:"time"`
 }
 
@@ -14,21 +14,14 @@ type FrequencyAll struct {
 	FrequencyBase
 }
 
+func (FrequencyAll) TableName() string { return "frequency" }
+
 type FrequencyUpdate struct {
-	ID int `json:"id" gorm:"primaryKey"`
+	ID int `json:"id"`
 	FrequencyBase
-	Password string `json:"password"`
+	Password string `json:"password"` // 非表字段
 }
 
 type FrequencyAddAll struct {
 	Data []FrequencyBase `json:"data"`
-}
-
-type FrequencyPaddwordAll struct {
-	ID       int    `json:"id" gorm:"primaryKey"`
-	Password string `json:"password"`
-}
-
-type FrequencyPaddwordAdd struct {
-	Password string `json:"password"`
 }

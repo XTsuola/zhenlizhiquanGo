@@ -1,5 +1,7 @@
 package models
 
+import "go_project/utils"
+
 type ShenqiBase struct {
 	Name    string `json:"name"`
 	Zhenyin int    `json:"zhenyin"`
@@ -9,25 +11,45 @@ type ShenqiBase struct {
 	Bonus   string `json:"bonus"`
 }
 
+// ShenqiData 神器效果（存在 Data JSON 中）
 type ShenqiData struct {
 	Effect string `json:"effect"`
 }
 
-type ShenqiAll struct {
-	ID int `json:"id" gorm:"primaryKey"`
-	ShenqiBase
-	Data []ShenqiData `json:"data"`
-}
-
+// ShenqiSelect DB 读取形态
 type ShenqiSelect struct {
 	ID int `json:"id" gorm:"primaryKey"`
 	ShenqiBase
 	Data string `json:"data"`
 }
 
+func (ShenqiSelect) TableName() string { return "shenqi" }
+
+// ShenqiAll API 输出形态
+type ShenqiAll struct {
+	ID int `json:"id" gorm:"primaryKey"`
+	ShenqiBase
+	Data []ShenqiData `json:"data"`
+}
+
+func (item ShenqiSelect) ToAll() ShenqiAll {
+	return ShenqiAll{
+		ID:         item.ID,
+		ShenqiBase: item.ShenqiBase,
+		Data:       utils.StringToArr[ShenqiData](item.Data),
+	}
+}
+
 type ShenqiAddParams struct {
 	ShenqiBase
 	Data []ShenqiData `json:"data"`
+}
+
+func (p ShenqiAddParams) ToObj() ShenqiAddObj {
+	return ShenqiAddObj{
+		ShenqiBase: p.ShenqiBase,
+		Data:       utils.ArrToString(p.Data),
+	}
 }
 
 type ShenqiAddData struct {
@@ -38,3 +60,5 @@ type ShenqiAddObj struct {
 	ShenqiBase
 	Data string `json:"data"`
 }
+
+func (ShenqiAddObj) TableName() string { return "shenqi" }
