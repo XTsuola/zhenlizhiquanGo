@@ -15,11 +15,12 @@ type HeroData struct {
 	Effect string `json:"effect"`
 }
 
-// HeroSelect DB 读取形态
+// HeroSelect DB 读取形态（Agent/Data 为 JSON 字符串）
 type HeroSelect struct {
 	ID int `json:"id" gorm:"primaryKey"`
 	HeroBase
-	Data string `json:"data"`
+	Agent string `json:"agent"`
+	Data  string `json:"data"`
 }
 
 func (HeroSelect) TableName() string { return "hero" }
@@ -28,25 +29,30 @@ func (HeroSelect) TableName() string { return "hero" }
 type HeroAll struct {
 	ID int `json:"id" gorm:"primaryKey"`
 	HeroBase
-	Data []HeroData `json:"data"`
+	Agent []string   `json:"agent"`
+	Data  []HeroData `json:"data"`
 }
 
 func (item HeroSelect) ToAll() HeroAll {
 	return HeroAll{
 		ID:       item.ID,
 		HeroBase: item.HeroBase,
+		Agent:    utils.StringToArr[string](item.Agent),
 		Data:     utils.StringToArr[HeroData](item.Data),
 	}
 }
 
+// HeroAddParams 单条新增请求（前端 agent 为 string[]）
 type HeroAddParams struct {
 	HeroBase
-	Data []HeroData `json:"data"`
+	Agent []string   `json:"agent"`
+	Data  []HeroData `json:"data"`
 }
 
 func (p HeroAddParams) ToObj() HeroAddObj {
 	return HeroAddObj{
 		HeroBase: p.HeroBase,
+		Agent:    utils.ArrToString(p.Agent),
 		Data:     utils.ArrToString(p.Data),
 	}
 }
@@ -55,9 +61,11 @@ type HeroAddData struct {
 	Data []HeroAddParams `json:"data"`
 }
 
+// HeroAddObj DB 写入形态
 type HeroAddObj struct {
 	HeroBase
-	Data string `json:"data"`
+	Agent string `json:"agent"`
+	Data  string `json:"data"`
 }
 
 func (HeroAddObj) TableName() string { return "hero" }
@@ -84,4 +92,9 @@ type ShardUpdateParams struct {
 
 type ShardAddData struct {
 	Data []ShardBase `json:"data"`
+}
+
+type AgentUpdate struct {
+	ID    int      `json:"id"`
+	Agent []string `json:"agent"`
 }

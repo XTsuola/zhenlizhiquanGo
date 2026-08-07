@@ -40,6 +40,7 @@ func InitController() {
 	R.GET("/hero/shardList", shardList)
 	R.POST("/hero/shardUpdate", shardUpdate)
 	R.POST("/hero/shardAdd", shardAdd)
+	R.POST("/hero/agentAdd", agentAdd)
 
 	// frequency
 	R.GET("/frequency/cardsAll", frequencyCardsAll)

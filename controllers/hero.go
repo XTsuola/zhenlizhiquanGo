@@ -64,3 +64,16 @@ func shardAdd(c *gin.Context) {
 	}
 	HandleOk(c, "新增成功")
 }
+
+func agentAdd(c *gin.Context) {
+	params, ok := bindJSON[models.AgentUpdate](c)
+	if !ok {
+		return
+	}
+	if !updateByID("hero", params.ID, map[string]interface{}{
+		"agent": ArrToString(params.Agent),
+	}, c) {
+		return
+	}
+	HandleOk(c, "操作成功")
+}

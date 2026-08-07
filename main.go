@@ -15,7 +15,7 @@ func main() {
 		addr = ":8002"
 	}
 
-	log.Printf("真理之泉服务启动，监听 %s", addr)
+	log.Printf("真理之拳服务启动，监听 %s", addr)
 	if err := router.Start(addr); err != nil {
 		log.Fatal("服务启动失败:", err)
 	}
