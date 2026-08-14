@@ -36,6 +36,7 @@ func memberUpdate(c *gin.Context) {
 	if !updateByID("member", c.Param("id"), map[string]interface{}{
 		"name":     params.Name,
 		"donation": params.Donation,
+		"reward":   params.Reward,
 		"score":    params.Score,
 		"title":    params.Title,
 		"remark":   params.Remark,
@@ -50,6 +51,15 @@ func memberDelete(c *gin.Context) {
 		return
 	}
 	HandleOk(c, "删除成功")
+}
+
+func memberRewardList(c *gin.Context) {
+	var data []models.MemberAll
+	if err := my.DB.Table("member").Where("reward > ?", 0).Order("reward desc").Find(&data).Error; err != nil {
+		MyErr(err.Error(), c)
+		return
+	}
+	SearchList("查询成功", c, data)
 }
 
 func memberAddAll(c *gin.Context) {

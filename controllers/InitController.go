@@ -97,6 +97,7 @@ func InitController() {
 	R.POST("/member/update/:id/", memberUpdate)
 	R.POST("/member/addAll", memberAddAll)
 	R.DELETE("/member/delete/:id/", memberDelete)
+	R.GET("/memberReward/list/", memberRewardList)
 
 	// AI（需配置环境变量 ARK_API_KEY）
 	// R.POST("/ai/query", aiQueryHandler)

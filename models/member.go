@@ -3,6 +3,7 @@ package models
 type MemberBase struct {
 	Name     string  `json:"name"`
 	Donation float64 `json:"donation"`
+	Reward   float64 `json:"reward"`
 	Score    float64 `json:"score"`
 	Title    string  `json:"title"`
 	Remark   string  `json:"remark"`
