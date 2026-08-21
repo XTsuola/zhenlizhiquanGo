@@ -73,6 +73,7 @@ func InitController() {
 
 	// shijiesai
 	R.GET("/shijiesai/list", shijiesaiList)
+	R.GET("/shijiesai/allList", shijiesaiAllList)
 	R.GET("/shijiesai/select", shijiesaiSelect)
 	R.POST("/shijiesai/add", shijiesaiAdd)
 	R.POST("/shijiesai/update", shijiesaiUpdate)

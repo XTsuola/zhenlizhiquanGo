@@ -109,3 +109,23 @@ func shijiesaiAddList(c *gin.Context) {
 	}
 	HandleOk(c, "新增成功")
 }
+
+func shijiesaiAllList(c *gin.Context) {
+	var list []models.ShijiesaiAll
+	var total int64
+	db := my.DB.Table("shijiesai")
+	if err := db.Count(&total).Error; err != nil {
+		MyErr(err.Error(), c)
+		return
+	}
+	if err := db.Order("no asc").Find(&list).Error; err != nil {
+		MyErr(err.Error(), c)
+		return
+	}
+
+	data := make([]models.ShijiesaiList, 0, len(list))
+	for _, item := range list {
+		data = append(data, item.ToList(true))
+	}
+	SearchByPage("查询成功", c, data, total)
+}
