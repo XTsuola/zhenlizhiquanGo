@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// 获取游戏地图
 func qingshuGetMap(c *gin.Context) {
 	var mapObj models.QingshuMapParams
 	if err := my.DB.Table("qingshu").Where("id = ?", 1).First(&mapObj).Error; err != nil {
@@ -19,6 +20,7 @@ func qingshuGetMap(c *gin.Context) {
 	SearchOne("查询成功", c, mapObj.ToData())
 }
 
+// 重置游戏
 func qingshuReset(c *gin.Context) {
 	cardBaseList := []int{1, 1, 1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7, 8}
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -42,6 +44,7 @@ func qingshuReset(c *gin.Context) {
 	HandleOk(c, "重置成功")
 }
 
+// 修改玩玩家名称
 func userNameUpdate(c *gin.Context) {
 	params, ok := bindJSON[models.UsernameUpdate](c)
 	if !ok {

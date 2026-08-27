@@ -16,33 +16,26 @@ func InitController() {
 		c.String(200, "HTTPS服务运行在端口8002")
 	})
 
-	// card
+	// card / card diy  卡牌/创意卡牌
 	R.GET("/card/list", cardList)
 	R.GET("/cardAll/list", cardAllList)
 	R.POST("/card/add", cardAdd)
 	R.POST("/card/gradeUpdate", cardGradeUpdate)
-	R.POST("/card/gradeUpdateList", cardGradeUpdateList)
 	R.POST("/card/tagUpdate", cardTagUpdate)
-	R.POST("/card/tagUpdateList", cardTagUpdateList)
-
-	// card diy
 	R.GET("/cardDiy/list", cardDiyList)
 	R.POST("/cardDiy/add", cardDiyAdd)
 	R.POST("/cardDiy/addAll", cardDiyAddAll)
 	R.POST("/cardDiy/update", cardDiyUpdate)
 	R.POST("/cardDiy/updateTemp", cardDiyUpdateTemp)
 
-	// shenqi / hero / shard
+	// shenqi / hero / shard 神器/英雄/碎片
 	R.GET("/shenqi/list", shenqiList)
 	R.POST("/shenqi/add", shenqiAdd)
 	R.GET("/hero/list", heroList)
 	R.POST("/hero/add", heroAdd)
-	R.GET("/hero/shardList", shardList)
-	R.POST("/hero/shardUpdate", shardUpdate)
-	R.POST("/hero/shardAdd", shardAdd)
 	R.POST("/hero/agentAdd", agentAdd)
 
-	// frequency
+	// frequency 卡组
 	R.GET("/frequency/cardsAll", frequencyCardsAll)
 	R.GET("/frequency/cardsDetail", frequencyCardsDetail)
 	R.POST("/frequency/cardsAdd", frequencyCardsAdd)
@@ -54,7 +47,7 @@ func InitController() {
 	R.GET("/frequency/passwordList", frequencyPasswordList)
 	R.DELETE("/frequency/passwordDelete", frequencyPasswordDelete)
 
-	// skin / skin diy
+	// skin / skin diy 皮肤/创意皮肤
 	R.GET("/skin/list", skinList)
 	R.POST("/skin/add", skinAdd)
 	R.GET("/skinDiy/list", skinDiyList)
@@ -63,15 +56,12 @@ func InitController() {
 	R.POST("/skinDiy/update", skinDiyUpdate)
 	R.POST("/skinDiy/updateTemp", skinDiyUpdateTemp)
 
-	// note / qingshu
-	R.GET("/note/list", noteList)
-	R.POST("/note/add", noteAdd)
-	R.DELETE("/note/delete", noteDelete)
+	// qingshu 情书游戏
 	R.GET("/qingshu/getMap", qingshuGetMap)
 	R.GET("/qingshu/reset", qingshuReset)
 	R.POST("/qingshu/updateUsername", userNameUpdate)
 
-	// shijiesai
+	// shijiesai 世界赛
 	R.GET("/shijiesai/list", shijiesaiList)
 	R.GET("/shijiesai/allList", shijiesaiAllList)
 	R.GET("/shijiesai/select", shijiesaiSelect)
@@ -80,9 +70,14 @@ func InitController() {
 	R.DELETE("/shijiesai/delete", shijiesaiDelete)
 	R.POST("/shijiesai/addList", shijiesaiAddList)
 
-	// log / question / answer
+	// note / log  留言/日志
+	R.GET("/note/list", noteList)
+	R.POST("/note/add", noteAdd)
+	R.DELETE("/note/delete", noteDelete)
 	R.GET("/log/list", logList)
 	R.GET("/log/add", logAdd)
+
+	// question / answer 问题/答案
 	R.GET("/question/list", questionList)
 	R.POST("/question/add", questionAdd)
 	R.GET("/question/detail", questionDetail)
@@ -92,7 +87,7 @@ func InitController() {
 	R.POST("/answer/addAll", answerAddAll)
 	R.GET("/answer/allList", answerAllList)
 
-	// member
+	// member 成员
 	R.GET("/member/list", memberList)
 	R.POST("/member/add", memberAdd)
 	R.POST("/member/update/:id/", memberUpdate)

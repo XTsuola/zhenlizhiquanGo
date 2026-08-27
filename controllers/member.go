@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// 成员列表
 func memberList(c *gin.Context) {
 	var data []models.MemberAll
 	if err := my.DB.Table("member").Order("donation desc, score desc").Find(&data).Error; err != nil {
@@ -16,6 +17,7 @@ func memberList(c *gin.Context) {
 	SearchList("查询成功", c, data)
 }
 
+// 新增成员
 func memberAdd(c *gin.Context) {
 	params, ok := bindJSON[models.MemberBase](c)
 	if !ok {
@@ -28,6 +30,7 @@ func memberAdd(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
+// 修改成员
 func memberUpdate(c *gin.Context) {
 	params, ok := bindJSON[models.MemberBase](c)
 	if !ok {
@@ -46,6 +49,7 @@ func memberUpdate(c *gin.Context) {
 	HandleOk(c, "操作成功")
 }
 
+// 删除成员
 func memberDelete(c *gin.Context) {
 	if !deleteByQuery("member", c, "id = ?", c.Param("id")) {
 		return
@@ -53,6 +57,7 @@ func memberDelete(c *gin.Context) {
 	HandleOk(c, "删除成功")
 }
 
+// 成员奖励列表
 func memberRewardList(c *gin.Context) {
 	var data []models.MemberAll
 	if err := my.DB.Table("member").Where("reward > ?", 0).Order("reward desc").Find(&data).Error; err != nil {
@@ -62,6 +67,7 @@ func memberRewardList(c *gin.Context) {
 	SearchList("查询成功", c, data)
 }
 
+// 批量新增成员
 func memberAddAll(c *gin.Context) {
 	params, ok := bindJSON[models.MemberAddData](c)
 	if !ok {

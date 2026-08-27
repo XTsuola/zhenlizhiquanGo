@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// 皮肤列表
 func skinList(c *gin.Context) {
 	list, ok := findAll[models.SkinSelect]("skin", c)
 	if !ok {
@@ -18,6 +19,7 @@ func skinList(c *gin.Context) {
 	SearchList("查询成功", c, data)
 }
 
+// 新增皮肤
 func skinAdd(c *gin.Context) {
 	params, ok := bindJSON[models.SkinAddData](c)
 	if !ok {

@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// 日志列表
 func logList(c *gin.Context) {
 	var data []models.LogList
 	if err := my.DB.Table("log").Order("time DESC").Find(&data).Error; err != nil {
@@ -18,6 +19,7 @@ func logList(c *gin.Context) {
 	SearchList("查询成功", c, data)
 }
 
+// 新增日志
 func logAdd(c *gin.Context) {
 	data := models.LogAdd{
 		Name: c.Query("name"),

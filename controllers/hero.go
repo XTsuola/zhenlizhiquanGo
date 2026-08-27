@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// 英雄列表
 func heroList(c *gin.Context) {
 	list, ok := findAll[models.HeroSelect]("hero", c)
 	if !ok {
@@ -18,6 +19,7 @@ func heroList(c *gin.Context) {
 	SearchList("查询成功", c, data)
 }
 
+// 批量新增英雄
 func heroAdd(c *gin.Context) {
 	params, ok := bindJSON[models.HeroAddData](c)
 	if !ok {
@@ -33,38 +35,7 @@ func heroAdd(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
-func shardList(c *gin.Context) {
-	list, ok := findAll[models.ShardAll]("shard", c)
-	if !ok {
-		return
-	}
-	SearchList("查询成功", c, list)
-}
-
-func shardUpdate(c *gin.Context) {
-	params, ok := bindJSON[models.ShardUpdateParams](c)
-	if !ok {
-		return
-	}
-	if !updateByID("shard", params.ID, map[string]interface{}{
-		"skillData": params.SkillData,
-	}, c) {
-		return
-	}
-	HandleOk(c, "操作成功")
-}
-
-func shardAdd(c *gin.Context) {
-	params, ok := bindJSON[models.ShardAddData](c)
-	if !ok {
-		return
-	}
-	if !createBatch("shard", params.Data, c) {
-		return
-	}
-	HandleOk(c, "新增成功")
-}
-
+// 修改英雄代理人
 func agentAdd(c *gin.Context) {
 	params, ok := bindJSON[models.AgentUpdate](c)
 	if !ok {

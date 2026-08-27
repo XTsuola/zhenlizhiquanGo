@@ -7,6 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// ---------- 创意皮肤 ----------
+
 func skinDiyList(c *gin.Context) {
 	data, ok := findAll[models.SkinDiyAll]("skin_diy", c)
 	if !ok {
@@ -49,6 +51,7 @@ func skinDiyFields(params models.SkinDiyUpdate) map[string]interface{} {
 	}
 }
 
+// skinDiyUpdate 管理员密码修改创意皮肤
 func skinDiyUpdate(c *gin.Context) {
 	params, ok := bindJSON[models.SkinDiyUpdate](c)
 	if !ok {
@@ -63,6 +66,7 @@ func skinDiyUpdate(c *gin.Context) {
 	HandleOk(c, "操作成功")
 }
 
+// skinDiyUpdateTemp 临时密码修改创意皮肤（用后即删）
 func skinDiyUpdateTemp(c *gin.Context) {
 	params, ok := bindJSON[models.SkinDiyUpdate](c)
 	if !ok {
@@ -80,6 +84,8 @@ func skinDiyUpdateTemp(c *gin.Context) {
 	}
 	HandleOk(c, "操作成功")
 }
+
+// ---------- 创意卡牌 ----------
 
 func cardDiyList(c *gin.Context) {
 	data, ok := findAll[models.CardDiyAll]("card_diy", c)
@@ -127,6 +133,7 @@ func cardDiyFields(params models.CardDiyUpdate) map[string]interface{} {
 	}
 }
 
+// cardDiyUpdate 管理员密码修改创意卡牌
 func cardDiyUpdate(c *gin.Context) {
 	params, ok := bindJSON[models.CardDiyUpdate](c)
 	if !ok {
@@ -141,6 +148,7 @@ func cardDiyUpdate(c *gin.Context) {
 	HandleOk(c, "操作成功")
 }
 
+// cardDiyUpdateTemp 临时密码修改创意卡牌（用后即删）
 func cardDiyUpdateTemp(c *gin.Context) {
 	params, ok := bindJSON[models.CardDiyUpdate](c)
 	if !ok {

@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// 卡组列字段
 func frequencyFields(params models.FrequencyUpdate) map[string]interface{} {
 	return map[string]interface{}{
 		"name":     params.Name,
@@ -18,6 +19,7 @@ func frequencyFields(params models.FrequencyUpdate) map[string]interface{} {
 	}
 }
 
+// 新增卡组
 func frequencyCardsAdd(c *gin.Context) {
 	params, ok := bindJSON[models.FrequencyBase](c)
 	if !ok {
@@ -30,6 +32,7 @@ func frequencyCardsAdd(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
+// 修改卡组
 func frequencyCardsUpdate(c *gin.Context) {
 	params, ok := bindJSON[models.FrequencyUpdate](c)
 	if !ok {
@@ -44,6 +47,7 @@ func frequencyCardsUpdate(c *gin.Context) {
 	HandleOk(c, "操作成功")
 }
 
+// 非管理员临时修改卡组
 func frequencyCardsUpdateTemp(c *gin.Context) {
 	params, ok := bindJSON[models.FrequencyUpdate](c)
 	if !ok {
@@ -62,6 +66,7 @@ func frequencyCardsUpdateTemp(c *gin.Context) {
 	HandleOk(c, "操作成功")
 }
 
+// 卡组详情
 func frequencyCardsDetail(c *gin.Context) {
 	id := queryInt(c, "id")
 	var list []models.FrequencyAll
@@ -72,6 +77,7 @@ func frequencyCardsDetail(c *gin.Context) {
 	SearchList("查询成功", c, list)
 }
 
+// 卡组列表
 func frequencyCardsAll(c *gin.Context) {
 	list, ok := findAll[models.FrequencyAll]("frequency", c)
 	if !ok {
@@ -80,6 +86,7 @@ func frequencyCardsAll(c *gin.Context) {
 	SearchList("查询成功", c, list)
 }
 
+// 删除卡组
 func frequencyCardsDelete(c *gin.Context) {
 	if !requireAdminPassword(c.Query("password"), c) {
 		return
@@ -90,6 +97,7 @@ func frequencyCardsDelete(c *gin.Context) {
 	HandleOk(c, "删除成功")
 }
 
+// 批量新增卡组
 func frequencyCardsAddAll(c *gin.Context) {
 	params, ok := bindJSON[models.FrequencyAddAll](c)
 	if !ok {
@@ -101,6 +109,7 @@ func frequencyCardsAddAll(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
+// 新增编辑卡组密码
 func frequencyPasswordAdd(c *gin.Context) {
 	params, ok := bindJSON[models.PasswordAdd](c)
 	if !ok {
@@ -113,6 +122,7 @@ func frequencyPasswordAdd(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
+// 修改编辑卡组密码
 func frequencyPasswordList(c *gin.Context) {
 	list, ok := findAll[models.PasswordAll]("password", c)
 	if !ok {
@@ -121,6 +131,7 @@ func frequencyPasswordList(c *gin.Context) {
 	SearchList("查询成功", c, list)
 }
 
+// 删除编辑卡组密码
 func frequencyPasswordDelete(c *gin.Context) {
 	if !deleteByQuery("password", c, "id = ?", queryInt(c, "id")) {
 		return

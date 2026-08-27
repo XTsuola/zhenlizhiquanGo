@@ -11,6 +11,7 @@ func shijiesaiRange(gameType int) (int, int) {
 	return gameType * 10000, (gameType + 1) * 10000
 }
 
+// 世界赛列表
 func shijiesaiList(c *gin.Context) {
 	pageSize := queryInt(c, "pageSize")
 	pageNo := queryInt(c, "pageNo")
@@ -36,6 +37,7 @@ func shijiesaiList(c *gin.Context) {
 	SearchByPage("查询成功", c, data, total)
 }
 
+// 世界赛不分页所有数据
 func shijiesaiSelect(c *gin.Context) {
 	lo, hi := shijiesaiRange(queryInt(c, "gameType"))
 	var list []models.ShijiesaiAll
@@ -50,6 +52,7 @@ func shijiesaiSelect(c *gin.Context) {
 	SearchList("查询成功", c, data)
 }
 
+// 新增世界赛
 func shijiesaiAdd(c *gin.Context) {
 	params, ok := bindJSON[models.ShijiesaiAdd](c)
 	if !ok {
@@ -72,6 +75,7 @@ func shijiesaiAdd(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
+// 修改世界赛
 func shijiesaiUpdate(c *gin.Context) {
 	params, ok := bindJSON[models.ShijiesaiList](c)
 	if !ok {
@@ -88,6 +92,7 @@ func shijiesaiUpdate(c *gin.Context) {
 	HandleOk(c, "操作成功")
 }
 
+// 删除世界赛
 func shijiesaiDelete(c *gin.Context) {
 	if !deleteByQuery("shijiesai", c, "id = ?", queryInt(c, "id")) {
 		return
@@ -95,6 +100,7 @@ func shijiesaiDelete(c *gin.Context) {
 	HandleOk(c, "删除成功")
 }
 
+// 批量添加世界赛
 func shijiesaiAddList(c *gin.Context) {
 	params, ok := bindJSON[models.ShijiesaiAddData](c)
 	if !ok {
@@ -110,6 +116,7 @@ func shijiesaiAddList(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
+// 获取所有世界赛信息
 func shijiesaiAllList(c *gin.Context) {
 	var list []models.ShijiesaiAll
 	var total int64
