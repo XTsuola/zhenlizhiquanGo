@@ -62,14 +62,6 @@ func (d QingshuMapData) ToUpdateMap() map[string]interface{} {
 	}
 }
 
-// QingshuDisCard 出牌相关参数（预留）
-type QingshuDisCard struct {
-	MyId    int `json:"myId"`
-	Pai     int `json:"pai"`
-	YourPai int `json:"yourPai"`
-	Index   int `json:"index"`
-}
-
 // Message WebSocket 入站消息
 type Message struct {
 	Type    int `json:"type"`
@@ -85,7 +77,7 @@ type ReturnMessage struct {
 	Msg  string `json:"msg"`
 }
 
-// UsernameUpdate 修改昵称（Password 实际为玩家槽位 "1"/"2"）
+// UsernameUpdate 修改昵称（Password 为玩家槽位 "1"/"2"）
 type UsernameUpdate struct {
 	Name     string `json:"name"`
 	Password string `json:"password"`

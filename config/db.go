@@ -16,6 +16,7 @@ func InitDB() {
 	dsn := os.Getenv("MYSQL_DSN")
 	if dsn == "" {
 		dsn = "root:123456@tcp(127.0.0.1:3306)/zhenlizhiquan?charset=utf8mb4&parseTime=True&loc=Local"
+		log.Println("未设置 MYSQL_DSN，使用本地默认连接")
 	}
 
 	var err error

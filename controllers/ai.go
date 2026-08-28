@@ -97,7 +97,10 @@ func extractArkText(result ArkRespResult) (string, error) {
 	return "", fmt.Errorf("方舟返回内容为空")
 }
 
-func callArkAPI(prompt string) (string, error) {
+func callArkAPI(ctx context.Context, prompt string) (string, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 	apiKey, epID, apiURL, err := arkConfig()
 	if err != nil {
 		return "", err
@@ -118,7 +121,7 @@ func callArkAPI(prompt string) (string, error) {
 		return "", err
 	}
 
-	httpReq, err := http.NewRequestWithContext(context.Background(), http.MethodPost, apiURL, bytes.NewReader(bodyBytes))
+	httpReq, err := http.NewRequestWithContext(ctx, http.MethodPost, apiURL, bytes.NewReader(bodyBytes))
 	if err != nil {
 		return "", err
 	}
@@ -149,7 +152,7 @@ func callArkAPI(prompt string) (string, error) {
 	return extractArkText(result)
 }
 
-func genSQLByAI(question string) (string, error) {
+func genSQLByAI(ctx context.Context, question string) (string, error) {
 	prompt := fmt.Sprintf(`
 你是专业MySQL SQL生成助手，严格遵守下面所有规则：
 【数据库表结构】
@@ -192,7 +195,7 @@ type int 神器类型【重点映射规则】
 用户问题：%s
 `, question)
 
-	sqlStr, err := callArkAPI(prompt)
+	sqlStr, err := callArkAPI(ctx, prompt)
 	if err != nil {
 		return "", err
 	}
@@ -223,7 +226,7 @@ type int 神器类型【重点映射规则】
 	return sqlStr, nil
 }
 
-func formatAnswer(question, sqlStr string, data []map[string]interface{}) (string, error) {
+func formatAnswer(ctx context.Context, question, sqlStr string, data []map[string]interface{}) (string, error) {
 	dataJSON, err := json.Marshal(data)
 	if err != nil {
 		return "", err
@@ -236,7 +239,7 @@ func formatAnswer(question, sqlStr string, data []map[string]interface{}) (strin
 请根据上面数据生成markdown返回
 如果结果为空，友好提示没有找到对应数据。
 `, question, sqlStr, string(dataJSON))
-	return callArkAPI(prompt)
+	return callArkAPI(ctx, prompt)
 }
 
 func aiQueryHandler(c *gin.Context) {
@@ -246,7 +249,8 @@ func aiQueryHandler(c *gin.Context) {
 		return
 	}
 
-	sqlText, err := genSQLByAI(req.Question)
+	ctx := c.Request.Context()
+	sqlText, err := genSQLByAI(ctx, req.Question)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "msg": "生成SQL失败:" + err.Error()})
 		return
@@ -258,7 +262,7 @@ func aiQueryHandler(c *gin.Context) {
 		return
 	}
 
-	answer, err := formatAnswer(req.Question, sqlText, data)
+	answer, err := formatAnswer(ctx, req.Question, sqlText, data)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "msg": "生成回答失败:" + err.Error()})
 		return

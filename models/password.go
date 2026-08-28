@@ -14,7 +14,3 @@ type PasswordAdd struct {
 }
 
 func (PasswordAdd) TableName() string { return "password" }
-
-// FrequencyPaddwordAll 兼容旧命名（拼写错误 FrequencyPaddword*）
-type FrequencyPaddwordAll = PasswordAll
-type FrequencyPaddwordAdd = PasswordAdd

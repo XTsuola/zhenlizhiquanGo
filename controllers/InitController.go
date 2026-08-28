@@ -13,7 +13,7 @@ var R = newEngine()
 
 func InitController() {
 	R.GET("/", func(c *gin.Context) {
-		c.String(200, "HTTPS服务运行在端口8002")
+		c.String(200, "服务运行中")
 	})
 
 	// card / card diy  卡牌/创意卡牌
