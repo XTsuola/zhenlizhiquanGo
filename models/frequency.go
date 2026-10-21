@@ -14,14 +14,11 @@ type FrequencyAll struct {
 	FrequencyBase
 }
 
+// TableName 表名 frequency
 func (FrequencyAll) TableName() string { return "frequency" }
 
 type FrequencyUpdate struct {
 	ID int `json:"id"`
 	FrequencyBase
 	Password string `json:"password"` // 非表字段
-}
-
-type FrequencyAddAll struct {
-	Data []FrequencyBase `json:"data"`
 }

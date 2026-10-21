@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 日志列表
+// logList 日志列表，按时间倒序
 func logList(c *gin.Context) {
 	var data []models.LogList
 	if err := my.DB.Table("log").Order("time DESC").Find(&data).Error; err != nil {
@@ -19,7 +19,7 @@ func logList(c *gin.Context) {
 	SearchList("查询成功", c, data)
 }
 
-// 新增日志
+// logAdd 新增日志，名称来自查询参数，时间取服务器当前时间
 func logAdd(c *gin.Context) {
 	data := models.LogAdd{
 		Name: c.Query("name"),

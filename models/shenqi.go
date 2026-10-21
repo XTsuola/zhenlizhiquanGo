@@ -23,6 +23,7 @@ type ShenqiSelect struct {
 	Data string `json:"data"`
 }
 
+// TableName 表名 shenqi
 func (ShenqiSelect) TableName() string { return "shenqi" }
 
 // ShenqiAll API 输出形态
@@ -32,6 +33,7 @@ type ShenqiAll struct {
 	Data []ShenqiData `json:"data"`
 }
 
+// ToAll 转为接口输出，把 Data 从 JSON 字符串还原为效果列表
 func (item ShenqiSelect) ToAll() ShenqiAll {
 	return ShenqiAll{
 		ID:         item.ID,
@@ -45,6 +47,7 @@ type ShenqiAddParams struct {
 	Data []ShenqiData `json:"data"`
 }
 
+// ToObj 转为入库形态，把 Data 序列化为 JSON 字符串
 func (p ShenqiAddParams) ToObj() ShenqiAddObj {
 	return ShenqiAddObj{
 		ShenqiBase: p.ShenqiBase,
@@ -52,13 +55,10 @@ func (p ShenqiAddParams) ToObj() ShenqiAddObj {
 	}
 }
 
-type ShenqiAddData struct {
-	Data []ShenqiAddParams `json:"data"`
-}
-
 type ShenqiAddObj struct {
 	ShenqiBase
 	Data string `json:"data"`
 }
 
+// TableName 表名 shenqi
 func (ShenqiAddObj) TableName() string { return "shenqi" }

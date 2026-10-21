@@ -10,8 +10,9 @@ type LogAll struct {
 	LogBase
 }
 
+// TableName 表名 log
 func (LogAll) TableName() string { return "log" }
 
-// 兼容旧命名
+// LogList、LogAdd 兼容旧命名，分别等同 LogAll、LogBase
 type LogList = LogAll
 type LogAdd = LogBase

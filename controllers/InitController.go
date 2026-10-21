@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// newEngine 创建 Release 模式的 Gin 引擎
 func newEngine() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	return gin.Default()
@@ -11,6 +12,7 @@ func newEngine() *gin.Engine {
 
 var R = newEngine()
 
+// InitController 注册全部 HTTP 路由
 func InitController() {
 	R.GET("/", func(c *gin.Context) {
 		c.String(200, "服务运行中")

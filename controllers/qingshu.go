@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// qingshuGetMap 获取情书对局，不存在时自动建局
 func qingshuGetMap(c *gin.Context) {
 	mapObj, err := qingshu.LoadOrInit()
 	if err != nil {
@@ -16,6 +17,7 @@ func qingshuGetMap(c *gin.Context) {
 	SearchOne("查询成功", c, mapObj.ToData())
 }
 
+// qingshuReset 重置情书对局
 func qingshuReset(c *gin.Context) {
 	if err := qingshu.Reset(0); err != nil {
 		MyErr(err.Error(), c)
@@ -24,6 +26,7 @@ func qingshuReset(c *gin.Context) {
 	HandleOk(c, "重置成功")
 }
 
+// userNameUpdate 修改情书玩家昵称
 func userNameUpdate(c *gin.Context) {
 	params, ok := bindJSON[models.UsernameUpdate](c)
 	if !ok {

@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 卡牌列表，根据种族查询：1.帝国、2.隐秘、3.禅意、4.港口、5.炼狱、6.蛮石、7.冬神
+// cardList 按阵营查询卡牌。阵营：1 帝国、2 隐秘、3 禅意、4 港口、5 炼狱、6 蛮石、7 冬神
 func cardList(c *gin.Context) {
 	id := queryInt(c, "zhenyin")
 	var list []models.CardSelect
@@ -22,7 +22,7 @@ func cardList(c *gin.Context) {
 	SearchList("查询成功", c, data)
 }
 
-// 所有卡牌列表，不分种族
+// cardAllList 全部卡牌，不按阵营过滤
 func cardAllList(c *gin.Context) {
 	list, ok := findAll[models.CardSelect]("card", c)
 	if !ok {
@@ -35,9 +35,9 @@ func cardAllList(c *gin.Context) {
 	SearchList("查询成功", c, data)
 }
 
-// 批量新增卡牌
+// cardAdd 批量新增卡牌
 func cardAdd(c *gin.Context) {
-	params, ok := bindJSON[models.CardAddData](c)
+	params, ok := bindJSON[models.BatchData[models.CardAddParams]](c)
 	if !ok {
 		return
 	}
@@ -51,7 +51,7 @@ func cardAdd(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
-// 修改卡牌评级
+// cardGradeUpdate 按 ID 更新卡牌评级
 func cardGradeUpdate(c *gin.Context) {
 	params, ok := bindJSON[models.CardUpdateGradeParams](c)
 	if !ok {
@@ -65,7 +65,7 @@ func cardGradeUpdate(c *gin.Context) {
 	HandleOk(c, "操作成功")
 }
 
-// 修改卡牌标签
+// cardTagUpdate 按 ID 更新卡牌标签
 func cardTagUpdate(c *gin.Context) {
 	params, ok := bindJSON[models.CardUpdateTagParams](c)
 	if !ok {

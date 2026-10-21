@@ -9,6 +9,7 @@ import (
 
 // ---------- 创意皮肤 ----------
 
+// skinDiyList 创意皮肤列表
 func skinDiyList(c *gin.Context) {
 	data, ok := findAll[models.SkinDiyAll]("skin_diy", c)
 	if !ok {
@@ -17,6 +18,7 @@ func skinDiyList(c *gin.Context) {
 	SearchList("查询成功", c, data)
 }
 
+// skinDiyAdd 新增创意皮肤
 func skinDiyAdd(c *gin.Context) {
 	params, ok := bindJSON[models.SkinDiyBase](c)
 	if !ok {
@@ -29,8 +31,9 @@ func skinDiyAdd(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
+// skinDiyAddAll 批量新增创意皮肤
 func skinDiyAddAll(c *gin.Context) {
-	params, ok := bindJSON[models.SkinDiyAddData](c)
+	params, ok := bindJSON[models.BatchData[models.SkinDiyBase]](c)
 	if !ok {
 		return
 	}
@@ -40,6 +43,7 @@ func skinDiyAddAll(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
+// skinDiyFields 创意皮肤可更新字段
 func skinDiyFields(params models.SkinDiyUpdate) map[string]interface{} {
 	return map[string]interface{}{
 		"cardId": params.CardId,
@@ -87,6 +91,7 @@ func skinDiyUpdateTemp(c *gin.Context) {
 
 // ---------- 创意卡牌 ----------
 
+// cardDiyList 创意卡牌列表
 func cardDiyList(c *gin.Context) {
 	data, ok := findAll[models.CardDiyAll]("card_diy", c)
 	if !ok {
@@ -95,6 +100,7 @@ func cardDiyList(c *gin.Context) {
 	SearchList("查询成功", c, data)
 }
 
+// cardDiyAdd 新增创意卡牌
 func cardDiyAdd(c *gin.Context) {
 	params, ok := bindJSON[models.CardDiyBase](c)
 	if !ok {
@@ -107,8 +113,9 @@ func cardDiyAdd(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
+// cardDiyAddAll 批量新增创意卡牌
 func cardDiyAddAll(c *gin.Context) {
-	params, ok := bindJSON[models.CardDiyAddData](c)
+	params, ok := bindJSON[models.BatchData[models.CardDiyBase]](c)
 	if !ok {
 		return
 	}
@@ -118,6 +125,7 @@ func cardDiyAddAll(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
+// cardDiyFields 创意卡牌可更新字段
 func cardDiyFields(params models.CardDiyUpdate) map[string]interface{} {
 	return map[string]interface{}{
 		"name":     params.Name,

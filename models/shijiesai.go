@@ -16,6 +16,7 @@ type ShijiesaiBase struct {
 	ShengfuList string `json:"shengfuList" gorm:"column:shengfuList"` // []int JSON
 }
 
+// TableName 表名 shijiesai
 func (ShijiesaiBase) TableName() string { return "shijiesai" }
 
 // ShijiesaiAll DB 完整行
@@ -24,6 +25,7 @@ type ShijiesaiAll struct {
 	ShijiesaiBase
 }
 
+// TableName 表名 shijiesai
 func (ShijiesaiAll) TableName() string { return "shijiesai" }
 
 // ShijiesaiAdd API 新增请求
@@ -34,6 +36,7 @@ type ShijiesaiAdd struct {
 	ShengfuList []int        `json:"shengfuList"`
 }
 
+// ToBase 把双方选手和胜负列表收成入库字段
 func (p ShijiesaiAdd) ToBase() ShijiesaiBase {
 	return ShijiesaiBase{
 		No:          p.No,
@@ -48,6 +51,7 @@ type ShijiesaiList struct {
 	ShijiesaiAdd
 }
 
+// ToList 转为列表形态；withShengfu 为 false 时不填充胜负列表
 func (item ShijiesaiAll) ToList(withShengfu bool) ShijiesaiList {
 	obj := ShijiesaiList{ID: item.ID}
 	obj.No = item.No
@@ -62,8 +66,4 @@ func (item ShijiesaiAll) ToList(withShengfu bool) ShijiesaiList {
 		obj.ShengfuList = utils.StringToArr[int](item.ShengfuList)
 	}
 	return obj
-}
-
-type ShijiesaiAddData struct {
-	Data []ShijiesaiList `json:"data"`
 }

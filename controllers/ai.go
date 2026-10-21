@@ -59,6 +59,7 @@ type QueryRequest struct {
 	Question string `json:"question" binding:"required"`
 }
 
+// arkConfig 读取方舟配置：API Key 必须来自环境变量，接入点与地址可回退到默认值
 func arkConfig() (apiKey, epID, apiURL string, err error) {
 	apiKey = os.Getenv("ARK_API_KEY")
 	if apiKey == "" {
@@ -75,6 +76,7 @@ func arkConfig() (apiKey, epID, apiURL string, err error) {
 	return apiKey, epID, apiURL, nil
 }
 
+// extractArkText 从方舟响应中取出助手文本，优先最后一条消息
 func extractArkText(result ArkRespResult) (string, error) {
 	for i := len(result.Output) - 1; i >= 0; i-- {
 		item := result.Output[i]
@@ -97,6 +99,7 @@ func extractArkText(result ArkRespResult) (string, error) {
 	return "", fmt.Errorf("方舟返回内容为空")
 }
 
+// callArkAPI 调用火山方舟接口，返回模型生成的文本
 func callArkAPI(ctx context.Context, prompt string) (string, error) {
 	if ctx == nil {
 		ctx = context.Background()
@@ -152,6 +155,7 @@ func callArkAPI(ctx context.Context, prompt string) (string, error) {
 	return extractArkText(result)
 }
 
+// genSQLByAI 把自然语言问题转成只查询 shenqi 表的 SELECT，并拒绝非查询语句
 func genSQLByAI(ctx context.Context, question string) (string, error) {
 	prompt := fmt.Sprintf(`
 你是专业MySQL SQL生成助手，严格遵守下面所有规则：
@@ -226,6 +230,7 @@ type int 神器类型【重点映射规则】
 	return sqlStr, nil
 }
 
+// formatAnswer 根据问题和查询结果生成 markdown 回答
 func formatAnswer(ctx context.Context, question, sqlStr string, data []map[string]interface{}) (string, error) {
 	dataJSON, err := json.Marshal(data)
 	if err != nil {
@@ -242,6 +247,7 @@ func formatAnswer(ctx context.Context, question, sqlStr string, data []map[strin
 	return callArkAPI(ctx, prompt)
 }
 
+// aiQueryHandler 自然语言查询神器：生成 SQL、执行查询并返回回答
 func aiQueryHandler(c *gin.Context) {
 	var req QueryRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -275,6 +281,7 @@ func aiQueryHandler(c *gin.Context) {
 	})
 }
 
+// QueryRaw 执行原始 SQL，按列名把每行收成 map
 func QueryRaw(sql string) ([]map[string]interface{}, error) {
 	rows, err := my.DB.Raw(sql).Rows()
 	if err != nil {
@@ -314,6 +321,7 @@ func QueryRaw(sql string) ([]map[string]interface{}, error) {
 	return result, nil
 }
 
+// execQuery 执行查询 SQL
 func execQuery(sqlStr string) ([]map[string]interface{}, error) {
 	return QueryRaw(sqlStr)
 }

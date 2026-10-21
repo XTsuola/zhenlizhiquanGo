@@ -15,16 +15,13 @@ type SkinDiyAll struct {
 	SkinDiyBase
 }
 
+// TableName 表名 skin_diy
 func (SkinDiyAll) TableName() string { return "skin_diy" }
 
 type SkinDiyUpdate struct {
 	ID int `json:"id"`
 	SkinDiyBase
 	Password string `json:"password"` // 管理员或临时密码，非表字段
-}
-
-type SkinDiyAddData struct {
-	Data []SkinDiyBase `json:"data"`
 }
 
 // CardDiyBase 卡牌 DIY
@@ -47,14 +44,11 @@ type CardDiyAll struct {
 	CardDiyBase
 }
 
+// TableName 表名 card_diy
 func (CardDiyAll) TableName() string { return "card_diy" }
 
 type CardDiyUpdate struct {
 	ID int `json:"id"`
 	CardDiyBase
 	Password string `json:"password"` // 非表字段
-}
-
-type CardDiyAddData struct {
-	Data []CardDiyBase `json:"data"`
 }

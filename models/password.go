@@ -6,6 +6,7 @@ type PasswordAll struct {
 	Password string `json:"password"`
 }
 
+// TableName 表名 password
 func (PasswordAll) TableName() string { return "password" }
 
 // PasswordAdd 新增临时密码
@@ -13,4 +14,5 @@ type PasswordAdd struct {
 	Password string `json:"password"`
 }
 
+// TableName 表名 password
 func (PasswordAdd) TableName() string { return "password" }

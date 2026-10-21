@@ -21,6 +21,7 @@ type SkinSelect struct {
 	Effect string `json:"effect"`
 }
 
+// TableName 表名 skin
 func (SkinSelect) TableName() string { return "skin" }
 
 // SkinAll API 输出形态
@@ -30,6 +31,7 @@ type SkinAll struct {
 	Effect []string `json:"effect"`
 }
 
+// ToAll 转为接口输出，把 Effect 从 JSON 字符串还原为字符串列表
 func (item SkinSelect) ToAll() SkinAll {
 	return SkinAll{
 		ID:       item.ID,
@@ -43,6 +45,7 @@ type SkinAddParams struct {
 	Effect []string `json:"effect"`
 }
 
+// ToObj 转为入库形态，把 Effect 序列化为 JSON 字符串
 func (p SkinAddParams) ToObj() SkinAddObj {
 	return SkinAddObj{
 		SkinBase: p.SkinBase,
@@ -50,13 +53,10 @@ func (p SkinAddParams) ToObj() SkinAddObj {
 	}
 }
 
-type SkinAddData struct {
-	Data []SkinAddParams `json:"data"`
-}
-
 type SkinAddObj struct {
 	SkinBase
 	Effect string `json:"effect"`
 }
 
+// TableName 表名 skin
 func (SkinAddObj) TableName() string { return "skin" }

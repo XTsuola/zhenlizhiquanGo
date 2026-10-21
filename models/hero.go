@@ -23,6 +23,7 @@ type HeroSelect struct {
 	Data  string `json:"data"`
 }
 
+// TableName 表名 hero
 func (HeroSelect) TableName() string { return "hero" }
 
 // HeroAll API 输出形态
@@ -33,6 +34,7 @@ type HeroAll struct {
 	Data  []HeroData `json:"data"`
 }
 
+// ToAll 转为接口输出，把 Agent、Data 从 JSON 字符串还原
 func (item HeroSelect) ToAll() HeroAll {
 	return HeroAll{
 		ID:       item.ID,
@@ -49,16 +51,13 @@ type HeroAddParams struct {
 	Data  []HeroData `json:"data"`
 }
 
+// ToObj 转为入库形态，把 Agent、Data 序列化为 JSON 字符串
 func (p HeroAddParams) ToObj() HeroAddObj {
 	return HeroAddObj{
 		HeroBase: p.HeroBase,
 		Agent:    utils.ArrToString(p.Agent),
 		Data:     utils.ArrToString(p.Data),
 	}
-}
-
-type HeroAddData struct {
-	Data []HeroAddParams `json:"data"`
 }
 
 // HeroAddObj DB 写入形态
@@ -68,6 +67,7 @@ type HeroAddObj struct {
 	Data  string `json:"data"`
 }
 
+// TableName 表名 hero
 func (HeroAddObj) TableName() string { return "hero" }
 
 // ---------- 碎片 ----------
@@ -83,15 +83,12 @@ type ShardAll struct {
 	ShardBase
 }
 
+// TableName 表名 shard
 func (ShardAll) TableName() string { return "shard" }
 
 type ShardUpdateParams struct {
 	ID        int    `json:"id"`
 	SkillData string `json:"skillData"`
-}
-
-type ShardAddData struct {
-	Data []ShardBase `json:"data"`
 }
 
 type AgentUpdate struct {

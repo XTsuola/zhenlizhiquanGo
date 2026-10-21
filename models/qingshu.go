@@ -26,6 +26,7 @@ type QingshuMapParams struct {
 	QingshuMapBase
 }
 
+// TableName 表名 qingshu
 func (QingshuMapParams) TableName() string { return "qingshu" }
 
 // QingshuMapData 运行时 / API 形态
@@ -37,6 +38,7 @@ type QingshuMapData struct {
 	QingshuMapBase
 }
 
+// ToData 转为对局运行形态，牌堆和玩家从 JSON 还原
 func (p QingshuMapParams) ToData() QingshuMapData {
 	return QingshuMapData{
 		ID:       p.ID,
@@ -51,6 +53,7 @@ func (p QingshuMapParams) ToData() QingshuMapData {
 	}
 }
 
+// ToUpdateMap 转为更新字段，牌堆和玩家序列化为 JSON 字符串
 func (d QingshuMapData) ToUpdateMap() map[string]interface{} {
 	return map[string]interface{}{
 		"round":    d.Round,

@@ -28,6 +28,7 @@ type CardSelect struct {
 	Data string `json:"data"`
 }
 
+// TableName 表名 card
 func (CardSelect) TableName() string { return "card" }
 
 // CardAll API 输出形态（Data 已反序列化）
@@ -37,6 +38,7 @@ type CardAll struct {
 	Data []CardData `json:"data"`
 }
 
+// ToAll 转为接口输出，把 Data 从 JSON 字符串还原为等级列表
 func (item CardSelect) ToAll() CardAll {
 	return CardAll{
 		ID:       item.ID,
@@ -51,16 +53,12 @@ type CardAddParams struct {
 	Data []CardData `json:"data"`
 }
 
+// ToObj 转为入库形态，把 Data 序列化为 JSON 字符串
 func (p CardAddParams) ToObj() CardAddObj {
 	return CardAddObj{
 		CardBase: p.CardBase,
 		Data:     utils.ArrToString(p.Data),
 	}
-}
-
-// CardAddData 批量新增请求
-type CardAddData struct {
-	Data []CardAddParams `json:"data"`
 }
 
 // CardAddObj DB 写入形态
@@ -69,6 +67,7 @@ type CardAddObj struct {
 	Data string `json:"data"`
 }
 
+// TableName 表名 card
 func (CardAddObj) TableName() string { return "card" }
 
 // CardUpdateGradeParams 单条更新 grade（请求为 []int）
@@ -77,28 +76,8 @@ type CardUpdateGradeParams struct {
 	Grade []int `json:"grade"`
 }
 
-// CardUpdateGradeListParams 批量更新 grade（请求已是字符串）
-type CardUpdateGradeListParams struct {
-	ID    int    `json:"id"`
-	Grade string `json:"grade"`
-}
-
-type CardUpdateGradeListData struct {
-	Data []CardUpdateGradeListParams `json:"data"`
-}
-
 // CardUpdateTagParams 单条更新 tag（请求为 []int）
 type CardUpdateTagParams struct {
 	ID  int   `json:"id"`
 	Tag []int `json:"tag"`
-}
-
-// CardUpdateTagListParams 批量更新 tag
-type CardUpdateTagListParams struct {
-	ID  int    `json:"id"`
-	Tag string `json:"tag"`
-}
-
-type CardUpdateTagListData struct {
-	Data []CardUpdateTagListParams `json:"data"`
 }

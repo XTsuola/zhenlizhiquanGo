@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 神器列表
+// shenqiList 按阵营查询神器
 func shenqiList(c *gin.Context) {
 	id := queryInt(c, "zhenyin")
 	var list []models.ShenqiSelect
@@ -22,9 +22,9 @@ func shenqiList(c *gin.Context) {
 	SearchList("查询成功", c, data)
 }
 
-// 批量新增神器
+// shenqiAdd 批量新增神器
 func shenqiAdd(c *gin.Context) {
-	params, ok := bindJSON[models.ShenqiAddData](c)
+	params, ok := bindJSON[models.BatchData[models.ShenqiAddParams]](c)
 	if !ok {
 		return
 	}

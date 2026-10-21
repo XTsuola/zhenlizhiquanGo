@@ -7,11 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// shijiesaiRange 按赛事类型计算场次编号的开区间 (gameType*10000, (gameType+1)*10000)
 func shijiesaiRange(gameType int) (int, int) {
 	return gameType * 10000, (gameType + 1) * 10000
 }
 
-// 世界赛列表
+// shijiesaiList 按赛事类型分页查询世界赛，页码从 1 开始，每页最多 100 条
 func shijiesaiList(c *gin.Context) {
 	pageSize := queryInt(c, "pageSize")
 	pageNo := queryInt(c, "pageNo")
@@ -46,7 +47,7 @@ func shijiesaiList(c *gin.Context) {
 	SearchByPage("查询成功", c, data, total)
 }
 
-// 世界赛不分页所有数据
+// shijiesaiSelect 按赛事类型查询全部场次，不分页，且不返回胜负列表
 func shijiesaiSelect(c *gin.Context) {
 	lo, hi := shijiesaiRange(queryInt(c, "gameType"))
 	var list []models.ShijiesaiAll
@@ -61,7 +62,7 @@ func shijiesaiSelect(c *gin.Context) {
 	SearchList("查询成功", c, data)
 }
 
-// 新增世界赛
+// shijiesaiAdd 新增一场世界赛，场次号已存在时拒绝
 func shijiesaiAdd(c *gin.Context) {
 	params, ok := bindJSON[models.ShijiesaiAdd](c)
 	if !ok {
@@ -84,7 +85,7 @@ func shijiesaiAdd(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
-// 修改世界赛
+// shijiesaiUpdate 按 ID 修改场次号、选手信息和胜负列表
 func shijiesaiUpdate(c *gin.Context) {
 	params, ok := bindJSON[models.ShijiesaiList](c)
 	if !ok {
@@ -101,7 +102,7 @@ func shijiesaiUpdate(c *gin.Context) {
 	HandleOk(c, "操作成功")
 }
 
-// 删除世界赛
+// shijiesaiDelete 按 ID 删除世界赛
 func shijiesaiDelete(c *gin.Context) {
 	if !deleteByQuery("shijiesai", c, "id = ?", queryInt(c, "id")) {
 		return
@@ -109,9 +110,9 @@ func shijiesaiDelete(c *gin.Context) {
 	HandleOk(c, "删除成功")
 }
 
-// 批量添加世界赛
+// shijiesaiAddList 批量新增世界赛
 func shijiesaiAddList(c *gin.Context) {
-	params, ok := bindJSON[models.ShijiesaiAddData](c)
+	params, ok := bindJSON[models.BatchData[models.ShijiesaiList]](c)
 	if !ok {
 		return
 	}
@@ -125,7 +126,7 @@ func shijiesaiAddList(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
-// 获取所有世界赛信息
+// shijiesaiAllList 查询全部世界赛并返回总数
 func shijiesaiAllList(c *gin.Context) {
 	var list []models.ShijiesaiAll
 	var total int64

@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 题目列表
+// questionList 题目列表
 func questionList(c *gin.Context) {
 	data, ok := findAll[models.QuestionAll]("question", c)
 	if !ok {
@@ -16,7 +16,7 @@ func questionList(c *gin.Context) {
 	SearchList("查询成功", c, data)
 }
 
-// 新增题目
+// questionAdd 新增题目
 func questionAdd(c *gin.Context) {
 	params, ok := bindJSON[models.QuestionBase](c)
 	if !ok {
@@ -29,7 +29,7 @@ func questionAdd(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
-// 题目详情
+// questionDetail 取 ID 最大的一道题目
 func questionDetail(c *gin.Context) {
 	var data models.QuestionAll
 	if err := my.DB.Table("question").Order("id desc").First(&data).Error; err != nil {
@@ -39,9 +39,9 @@ func questionDetail(c *gin.Context) {
 	SearchOne("查询成功", c, data)
 }
 
-// 批量新增题目
+// questionAddAll 批量新增题目
 func questionAddAll(c *gin.Context) {
-	params, ok := bindJSON[models.QuestionAddData](c)
+	params, ok := bindJSON[models.BatchData[models.QuestionBase]](c)
 	if !ok {
 		return
 	}
@@ -51,7 +51,7 @@ func questionAddAll(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
-// 新增答案
+// answerAdd 新增答案
 func answerAdd(c *gin.Context) {
 	params, ok := bindJSON[models.AnswerBase](c)
 	if !ok {
@@ -64,7 +64,7 @@ func answerAdd(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
-// 问题对应答案列表
+// answerList 某一题目的答案，按时间倒序
 func answerList(c *gin.Context) {
 	questionId := queryInt(c, "questionId")
 	var data []models.AnswerAll
@@ -75,9 +75,9 @@ func answerList(c *gin.Context) {
 	SearchList("查询成功", c, data)
 }
 
-// 批量新增答案
+// answerAddAll 批量新增答案
 func answerAddAll(c *gin.Context) {
-	params, ok := bindJSON[models.AnswerAddData](c)
+	params, ok := bindJSON[models.BatchData[models.AnswerBase]](c)
 	if !ok {
 		return
 	}
@@ -87,7 +87,7 @@ func answerAddAll(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
-// 所有答案列表
+// answerAllList 全部答案，按时间倒序
 func answerAllList(c *gin.Context) {
 	var data []models.AnswerAll
 	if err := my.DB.Table("answer").Order("time DESC").Find(&data).Error; err != nil {

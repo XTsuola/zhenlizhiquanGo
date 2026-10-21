@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 英雄列表
+// heroList 英雄列表，代理人与技能数据从 JSON 还原
 func heroList(c *gin.Context) {
 	list, ok := findAll[models.HeroSelect]("hero", c)
 	if !ok {
@@ -19,9 +19,9 @@ func heroList(c *gin.Context) {
 	SearchList("查询成功", c, data)
 }
 
-// 批量新增英雄
+// heroAdd 批量新增英雄
 func heroAdd(c *gin.Context) {
-	params, ok := bindJSON[models.HeroAddData](c)
+	params, ok := bindJSON[models.BatchData[models.HeroAddParams]](c)
 	if !ok {
 		return
 	}
@@ -35,7 +35,7 @@ func heroAdd(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
-// 修改英雄代理人
+// agentAdd 按 ID 更新英雄代理人
 func agentAdd(c *gin.Context) {
 	params, ok := bindJSON[models.AgentUpdate](c)
 	if !ok {

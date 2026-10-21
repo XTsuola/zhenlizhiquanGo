@@ -12,4 +12,5 @@ type NoteAll struct {
 	NoteBase
 }
 
+// TableName 表名 note
 func (NoteAll) TableName() string { return "note" }

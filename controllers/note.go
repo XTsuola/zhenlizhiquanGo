@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 留言列表
+// noteList 留言列表
 func noteList(c *gin.Context) {
 	data, ok := findAll[models.NoteAll]("note", c)
 	if !ok {
@@ -17,7 +17,7 @@ func noteList(c *gin.Context) {
 	SearchList("查询成功", c, data)
 }
 
-// 新增留言
+// noteAdd 新增留言
 func noteAdd(c *gin.Context) {
 	params, ok := bindJSON[models.NoteBase](c)
 	if !ok {
@@ -30,7 +30,7 @@ func noteAdd(c *gin.Context) {
 	HandleOk(c, "新增成功")
 }
 
-// 删除留言
+// noteDelete 按 ID 删除留言
 func noteDelete(c *gin.Context) {
 	if !deleteByQuery("note", c, "id = ?", queryInt(c, "id")) {
 		return

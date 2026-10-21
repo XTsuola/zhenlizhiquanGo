@@ -10,11 +10,8 @@ type QuestionAll struct {
 	QuestionBase
 }
 
+// TableName 表名 question
 func (QuestionAll) TableName() string { return "question" }
-
-type QuestionAddData struct {
-	Data []QuestionBase `json:"data"`
-}
 
 type AnswerBase struct {
 	QuestionId int    `json:"questionId" gorm:"column:questionId"`
@@ -28,8 +25,5 @@ type AnswerAll struct {
 	AnswerBase
 }
 
+// TableName 表名 answer
 func (AnswerAll) TableName() string { return "answer" }
-
-type AnswerAddData struct {
-	Data []AnswerBase `json:"data"`
-}
