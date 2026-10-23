@@ -22,9 +22,6 @@ func shijiesaiList(c *gin.Context) {
 	if pageSize <= 0 {
 		pageSize = 10
 	}
-	if pageSize > 100 {
-		pageSize = 100
-	}
 	lo, hi := shijiesaiRange(queryInt(c, "gameType"))
 	offset := (pageNo - 1) * pageSize
 
